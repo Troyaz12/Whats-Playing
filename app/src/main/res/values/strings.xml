@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">whatsPlaying_2</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="sort_key">Sort Order Used</string>
+    <string name="default_sort_value">Most Popular</string>
+    <string name="title_activity_movie_detail">MovieDetail</string>
+    <string name="content_authority">com.example.android.whatsplaying_2</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="movie_review">Movie Review</string>
+    <string name="Author">"\nAuthor: "</string>
+</resources>
