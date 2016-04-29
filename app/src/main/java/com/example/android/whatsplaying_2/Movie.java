@@ -28,13 +28,13 @@ public class Movie implements Parcelable{
         this.id = movieId;
         this.tableID = movieTableID;
 
-        int trailerSize = ltrailers.length;
-        trailers = new String[trailerSize];
+//        int trailerSize = ltrailers.length;
+  //      trailers = new String[trailerSize];
 
-        for (int x=0; x<trailerSize; x++) {
-            this.trailers[x] = ltrailers[x];
-            System.out.println("trailers in object: " + trailers[x]);
-        }
+    //    for (int x=0; x<trailerSize; x++) {
+      //      this.trailers[x] = ltrailers[x];
+        //    System.out.println("trailers in object: " + trailers[x]);
+      //  }
 
         this.sortOrder = sort;
 

@@ -2,6 +2,8 @@ package com.example.android.whatsplaying_2;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+
+import com.example.android.whatsplaying_2.data.MovieContract;
 
 import org.json.JSONException;
 
@@ -26,6 +30,7 @@ public class MainActivityFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
     public loadMovieInfo movieTask;
+    public String sortOrder;
     String[] reviews;
 
     public MainActivityFragment() {
@@ -50,20 +55,35 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container,false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        movieAdapter = new MovieAdapter(getActivity(),mList);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sortOrder = prefs.getString(getString(R.string.sort_key),
+                getString(R.string.default_sort_value));
+
+        Uri movieDetailsURI=null;
+        if(sortOrder.equals("Most Popular")) {
+            movieDetailsURI = MovieContract.MostPopularEntry.CONTENT_URI;
+        }else if(sortOrder.equals("Highest Rated")){
+            movieDetailsURI = MovieContract.HighestRatedEntry.CONTENT_URI;
+        }else if(sortOrder.equals("Favorites")){
+            movieDetailsURI = MovieContract.FavoriteEntry.CONTENT_URI;
+        }
+
+        Cursor cur = getActivity().getContentResolver().query(movieDetailsURI, //pull only movies that user wants to see, either most popular or highest rated
+                null, null,null, null);
+
+        movieAdapter = new MovieAdapter(getActivity(),cur,0);
 
         GridView gridView = (GridView) rootView.findViewById(R.id.gridview);
         gridView.setAdapter(movieAdapter);
 
 
 
-
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Movie item = movieAdapter.getItem(i);
+                Movie item = (Movie) movieAdapter.getItem(i);
 
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
@@ -99,11 +119,8 @@ public class MainActivityFragment extends Fragment {
 
     public void loadMovies(){
 
-        movieTask = new loadMovieInfo(getActivity(), movieAdapter);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.sort_key),
-                getString(R.string.default_sort_value));
-        movieTask.execute(location);
+        movieTask = new loadMovieInfo(getActivity());
+        movieTask.execute(sortOrder);
 
     }
 

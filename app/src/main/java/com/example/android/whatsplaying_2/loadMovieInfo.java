@@ -4,13 +4,11 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.android.whatsplaying_2.data.MovieContract;
-import com.example.android.whatsplaying_2.data.MovieDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +25,7 @@ import java.util.Vector;
 /**
  * Created by TroysMacBook on 3/30/16.
  */
-public class loadMovieInfo extends AsyncTask<String, Void, Movie[]> {
+public class loadMovieInfo extends AsyncTask<String, Void, Void> {
 
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
     private MovieAdapter movieAdapter;
@@ -38,9 +36,8 @@ public class loadMovieInfo extends AsyncTask<String, Void, Movie[]> {
             MovieContract.MostPopularTrailers.TRAILER_KEY,
     };
 
-    public loadMovieInfo(Context context, MovieAdapter movieAdapterImport) {
+    public loadMovieInfo(Context context) {
         mContext = context;
-        movieAdapter = movieAdapterImport;
     }
 
 
@@ -107,7 +104,7 @@ public class loadMovieInfo extends AsyncTask<String, Void, Movie[]> {
         return movieTableId;
     }
 
-    protected Movie[] doInBackground(String... params) {
+    protected Void doInBackground(String... params) {
 
 
         HttpURLConnection urlConnection = null;
@@ -207,13 +204,6 @@ public class loadMovieInfo extends AsyncTask<String, Void, Movie[]> {
             }
         }
 
-        try {
-            return getMovieData(movieString,queryTable);
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
-
-        }
         //if there is an error parsing the forecast
         return null;
 
@@ -538,7 +528,7 @@ public class loadMovieInfo extends AsyncTask<String, Void, Movie[]> {
 
 
     }
-    private Movie[] getMovieData(String movieJsonStr, String queryTable) throws JSONException {
+    private void getMovieData(String movieJsonStr, String queryTable) throws JSONException {
         System.out.println("JSON: " + movieJsonStr);
 
         final String getResults = "results";
@@ -601,9 +591,7 @@ public class loadMovieInfo extends AsyncTask<String, Void, Movie[]> {
         }
 
         if (cVVector.size() > 0) {
-             MovieDbHelper mOpenHelper;
-            mOpenHelper = new MovieDbHelper(mContext);
-            SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
 /*
         if(queryTable.equals("Highest Rated"))
             db.delete(MovieContract.MostPopularEntry.TABLE_NAME, MovieContract.MostPopularEntry.SORT_ORDER + " = ?", new String[] {"Highest Rated"});
@@ -678,89 +666,89 @@ public class loadMovieInfo extends AsyncTask<String, Void, Movie[]> {
         System.out.println("URI: "+movieDetailsURI);
 
         //get cursor count, set up movie array to store values in.
-        int cursorRecords = cur.getCount();
-        System.out.println("records" +cursorRecords);
+            int cursorRecords = cur.getCount();
+            System.out.println("records" +cursorRecords);
 
 
-        int cursorRecords2;
-        Movie[] moviesPlaying = new Movie[cursorRecords];
+            int cursorRecords2;
+            Movie[] moviesPlaying = new Movie[cursorRecords];
 
 
-        String insertMovie_id;
-        String insertMovieTitle;
-        String insertMoviePoster;
-        String insertMoviePlotSynopsis;
-        String insertMovieVoteAverage;
-        String insertMovieReleaseDate;
-        Long insertTableID;
+            String insertMovie_id;
+            String insertMovieTitle;
+            String insertMoviePoster;
+            String insertMoviePlotSynopsis;
+            String insertMovieVoteAverage;
+            String insertMovieReleaseDate;
+            Long insertTableID;
 
 
-        Long insertMovie_Selected_trailer_id;
-        String insertTrailer=null;
+            Long insertMovie_Selected_trailer_id;
+            String insertTrailer=null;
 
-      //  String[] trailers = new String[cursorRecords];
-        String[] trailers;
-        //move through cursor, store data in movie array
-        if (cur.moveToFirst()) {
-            for(int i=0; i<cursorRecords; i++){
-                //load movie data into a movie array
-                insertTableID =  cur.getLong(cur.getColumnIndex("_id"));
-                insertMovie_id = cur.getString(cur.getColumnIndex("movie_id"));
+            //  String[] trailers = new String[cursorRecords];
+            String[] trailers;
+            //move through cursor, store data in movie array
+            if (cur.moveToFirst()) {
+                for(int i=0; i<cursorRecords; i++){
+                    //load movie data into a movie array
+                    insertTableID =  cur.getLong(cur.getColumnIndex("_id"));
+                    insertMovie_id = cur.getString(cur.getColumnIndex("movie_id"));
 
-                System.out.println("movie id: " +insertMovie_id + " "+ insertTableID);
+                    System.out.println("movie id: " +insertMovie_id + " "+ insertTableID);
 
-                //load movie trailers
-                getMovieTrailer(insertTableID, insertMovie_id);
+                    //load movie trailers
+                    getMovieTrailer(insertTableID, insertMovie_id);
 
 
-                if(sortOrder.equals("Most Popular")) {
-                    //put trailers in a cursor
-                     movieTrailersURI = MovieContract.MostPopularTrailers.buildTrailer(insertTableID, insertTableID);
-                }else if(sortOrder.equals("Highest Rated")){
-                    movieTrailersURI = MovieContract.HighestRatedTrailers.buildTrailer(insertTableID, insertTableID);
-                } else if(sortOrder.equals("Favorites")) {
-                    movieTrailersURI = MovieContract.FavoriteTrailers.buildTrailer(insertTableID, insertTableID);
-                }
-
-                Cursor curTrailer = mContext.getContentResolver().query(movieTrailersURI,
-                        null, null, null, null);
-                cursorRecords2 = curTrailer.getCount();
-                trailers = new String[cursorRecords2];
-                System.out.println("Trailer uri: "+movieTrailersURI+ " number of records: "+cursorRecords2);
-//put trailers in a string array so they can be passed into a movie object
-                if (curTrailer.moveToFirst()) {
-                    for (int x = 0; x < cursorRecords2; x++) {
-                        insertMovie_Selected_trailer_id = curTrailer.getLong(curTrailer.getColumnIndex("movie_selected_Trailer"));
-                        if(insertMovie_Selected_trailer_id.equals(insertTableID)) {
-                            insertTrailer = curTrailer.getString(curTrailer.getColumnIndex("trailer_key"));
-
-                            trailers[x] = insertTrailer;
-                        }
-                        curTrailer.moveToNext();
+                    if(sortOrder.equals("Most Popular")) {
+                        //put trailers in a cursor
+                        movieTrailersURI = MovieContract.MostPopularTrailers.buildTrailer(insertTableID, insertTableID);
+                    }else if(sortOrder.equals("Highest Rated")){
+                        movieTrailersURI = MovieContract.HighestRatedTrailers.buildTrailer(insertTableID, insertTableID);
+                    } else if(sortOrder.equals("Favorites")) {
+                        movieTrailersURI = MovieContract.FavoriteTrailers.buildTrailer(insertTableID, insertTableID);
                     }
-                }
 
-                int numtrailers = trailers.length;
-                for (int x = 0; x < numtrailers; x++) {
-                    System.out.println("trailers in array: " +trailers[x]);
-                }
+                    Cursor curTrailer = mContext.getContentResolver().query(movieTrailersURI,
+                            null, null, null, null);
+                    cursorRecords2 = curTrailer.getCount();
+                    trailers = new String[cursorRecords2];
+                    System.out.println("Trailer uri: "+movieTrailersURI+ " number of records: "+cursorRecords2);
+//put trailers in a string array so they can be passed into a movie object
+                    if (curTrailer.moveToFirst()) {
+                        for (int x = 0; x < cursorRecords2; x++) {
+                            insertMovie_Selected_trailer_id = curTrailer.getLong(curTrailer.getColumnIndex("movie_selected_Trailer"));
+                            if(insertMovie_Selected_trailer_id.equals(insertTableID)) {
+                                insertTrailer = curTrailer.getString(curTrailer.getColumnIndex("trailer_key"));
+
+                                trailers[x] = insertTrailer;
+                            }
+                            curTrailer.moveToNext();
+                        }
+                    }
+
+                    int numtrailers = trailers.length;
+                    for (int x = 0; x < numtrailers; x++) {
+                        System.out.println("trailers in array: " +trailers[x]);
+                    }
 
 
-                insertMovieTitle= cur.getString(cur.getColumnIndex("title"));
-                insertMoviePoster= cur.getString(cur.getColumnIndex("image"));
-                insertMoviePlotSynopsis= cur.getString(cur.getColumnIndex("overview"));
-                insertMovieVoteAverage= cur.getString(cur.getColumnIndex("vote_average"));
-                insertMovieReleaseDate= cur.getString(cur.getColumnIndex("release_date"));
+                    insertMovieTitle= cur.getString(cur.getColumnIndex("title"));
+                    insertMoviePoster= cur.getString(cur.getColumnIndex("image"));
+                    insertMoviePlotSynopsis= cur.getString(cur.getColumnIndex("overview"));
+                    insertMovieVoteAverage= cur.getString(cur.getColumnIndex("vote_average"));
+                    insertMovieReleaseDate= cur.getString(cur.getColumnIndex("release_date"));
 
-                System.out.println("Movie Info: "+insertMovieTitle+insertMoviePoster);
+                    System.out.println("Movie Info: "+insertMovieTitle+insertMoviePoster);
 
 //pass data into the movie object
-                moviesPlaying[i] = new Movie(insertMovieTitle, insertMovieReleaseDate, insertMoviePoster, insertMovieVoteAverage, insertMoviePlotSynopsis, insertMovie_id, insertTableID,trailers,sortOrder);
+                    moviesPlaying[i] = new Movie(insertMovieTitle, insertMovieReleaseDate, insertMoviePoster, insertMovieVoteAverage, insertMoviePlotSynopsis, insertMovie_id, insertTableID,trailers,sortOrder);
 
-                //movie to next row in cursor
-                cur.moveToNext();
-                curTrailer.close();
-            }
+                    //movie to next row in cursor
+                    cur.moveToNext();
+                    curTrailer.close();
+                }
 
 
             int trailerLength;
@@ -783,18 +771,6 @@ public class loadMovieInfo extends AsyncTask<String, Void, Movie[]> {
 
 
         Log.d(LOG_TAG, "Sync Complete. " + cVVector.size() + " Inserted");
-//end of new code just added
-        return moviesPlaying;
-    }
-
-    protected void onPostExecute(Movie[] result) {
-
-        if (result != null) {
-            movieAdapter.clear();
-            for (Movie movieStr : result) {
-                movieAdapter.add(movieStr);
-            }
-        }
 
     }
 }
