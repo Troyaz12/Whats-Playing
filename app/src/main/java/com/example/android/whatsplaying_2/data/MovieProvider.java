@@ -104,7 +104,8 @@ public class MovieProvider extends ContentProvider{
     private static final String MovieTrailerSelection =
             MovieContract.MostPopularEntry.TABLE_NAME +
                     "." + MovieContract.MostPopularEntry._ID + " = ? AND "+
-            MovieContract.MostPopularTrailers.MOVIE_SELECTED_TRAILER + " = ? ";
+            MovieContract.MostPopularTrailers.MOVIE_SELECTED_TRAILER + " = ? AND "+
+            MovieContract.MostPopularReviews.MOVIE_SELECTED_REVIEWS + " = ? ";
 
     private static final String MovieReviewSelection =
             MovieContract.MostPopularEntry.TABLE_NAME +
@@ -113,7 +114,8 @@ public class MovieProvider extends ContentProvider{
 
     private static final String MovieDetails =
             MovieContract.MostPopularEntry.TABLE_NAME +
-                    "." + MovieContract.MostPopularEntry._ID+ " = ? ";
+                    "." + MovieContract.MostPopularEntry._ID+ " AND "+
+            MovieContract.MostPopularTrailers.MOVIE_SELECTED_TRAILER;
 
     private static final String HighestRatedMovieDetails =
             MovieContract.HighestRatedEntry.TABLE_NAME +
@@ -122,7 +124,8 @@ public class MovieProvider extends ContentProvider{
     private static final String HighestRatedTrailerSelection =
             MovieContract.HighestRatedEntry.TABLE_NAME +
                     "." + MovieContract.HighestRatedEntry._ID + " = ? AND "+
-                    MovieContract.HighestRatedTrailers.MOVIE_SELECTED_TRAILER + " = ? ";
+                    MovieContract.HighestRatedTrailers.MOVIE_SELECTED_TRAILER + " = ? AND "+
+                    MovieContract.HighestRatedReviews.MOVIE_SELECTED_REVIEWS + " = ? ";
 
     private static final String HighestRatedReviewSelection =
             MovieContract.HighestRatedEntry.TABLE_NAME +
@@ -181,10 +184,10 @@ public class MovieProvider extends ContentProvider{
         return MovieQueryBuilder.query(mOpenHelper.getReadableDatabase(),  //table
                 projection,         //columns to return
                 MovieDetails,               //rows wanted
-                new String[]{MovieSelected},               //selection args
+                null,               //selection args
                 null,               //group by
                 null,               //row included in cursor
-                null                //order by
+                sortOrder                //order by
         );
     }
 
@@ -198,7 +201,7 @@ public class MovieProvider extends ContentProvider{
         return MovieQueryBuilder.query(mOpenHelper.getReadableDatabase(),  //table
                 projection,         //columns to return
                 MovieTrailerSelection,               //rows wanted
-                new String[]{MovieSelected, MovieSelected2},               //selection args
+                new String[]{MovieSelected, MovieSelected2,MovieSelected2},               //selection args
                 null,               //group by
                 null,               //row included in cursor
                 sortOrder                //order by
@@ -243,7 +246,7 @@ public class MovieProvider extends ContentProvider{
         return MovieQueryHighestRatedBuilder.query(mOpenHelper.getReadableDatabase(),  //table
                 projection,         //columns to return
                 HighestRatedTrailerSelection,               //rows wanted
-                new String[]{MovieSelected,MovieSelected2},               //selection args
+                new String[]{MovieSelected,MovieSelected2,MovieSelected2},               //selection args
                 null,               //group by
                 null,               //row included in cursor
                 sortOrder                //order by
@@ -483,13 +486,14 @@ public class MovieProvider extends ContentProvider{
             {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MostPopularEntry.TABLE_NAME,
+                        projection,
                         null,
                         null,
                         null,
                         null,
-                        null,
-                        null);
-                System.out.println("Query"+ "MOST_POPULAR_MOVIES");
+                        null
+                );
+                System.out.println("Query" + "MOST_POPULAR_MOVIES");
                 break;
             }
             // movie details
@@ -579,7 +583,7 @@ public class MovieProvider extends ContentProvider{
                         null,
                         null
                 );
-                System.out.println("Query"+ "HIGHEST_RATED_REVIEWS");
+                System.out.println("Query"+ "HIGHEST_RATED_REVIEWS_TABLE");
 
                 break;
             }

@@ -15,7 +15,7 @@ import com.example.android.whatsplaying_2.data.MovieContract.MostPopularReviews;
 public class MovieDbHelper extends SQLiteOpenHelper{
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     static final String DATABASE_NAME = "Movie.db";
 
@@ -114,7 +114,6 @@ public class MovieDbHelper extends SQLiteOpenHelper{
         final String SQL_CREATE_FAVORITE_REVIEWS = "CREATE TABLE " + MovieContract.FavoriteReviews.TABLE_NAME + " (" +
                 MovieContract.FavoriteReviews._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 MovieContract.FavoriteReviews.MOVIE_SELECTED_REVIEWS + " INTEGER NOT NULL, " +
-                MovieContract.FavoriteReviews.AUTHOR + " TEXT NOT NULL, " +
                 MovieContract.FavoriteReviews.REVIEWS + " TEXT NOT NULL, " +
                 // Set up foreign key from mostpopularentry table to mostpopularmoviereviews.
                 " FOREIGN KEY (" + MovieContract.FavoriteReviews.MOVIE_SELECTED_REVIEWS + ") REFERENCES " +

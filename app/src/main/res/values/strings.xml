@@ -11,4 +11,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="movie_review">Movie Review</string>
     <string name="Author">"\nAuthor: "</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">whatsplaying_2.example.com</string>
+
+
 </resources>

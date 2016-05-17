@@ -1,79 +1,89 @@
 package com.example.android.whatsplaying_2;
 
+//import android.app.LoaderManager;
+//import android.content.CursorLoader;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.preference.PreferenceManager;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.android.whatsplaying_2.data.MovieContract;
 
-import org.json.JSONException;
 
-import java.util.ArrayList;
+//import android.content.Loader;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int Popular_MOVIE_LOADER = 0;
+    private static final int Highest_MOVIE_LOADER = 1;
+    public Handler handler = new Handler();
     private MovieAdapter movieAdapter;
-    public ArrayList<Movie> mList;
+    public String mList;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
-    public loadMovieInfo movieTask;
     public String sortOrder;
-    String[] reviews;
+
+    private static final String[] MOVIE_COLUMNS_MOST_POPULAR = {
+      MovieContract.MostPopularEntry.TABLE_NAME+"."+MovieContract.MostPopularEntry._ID,
+            MovieContract.MostPopularEntry.MOVIE_ID,
+            MovieContract.MostPopularEntry.IMAGE
+    };
+
+
+    private static final String[] MOVIE_COLUMNS_HIGHEST_RATED = {
+            MovieContract.HighestRatedEntry.TABLE_NAME+"."+MovieContract.HighestRatedEntry._ID,
+            MovieContract.HighestRatedEntry.MOVIE_ID,
+            MovieContract.HighestRatedEntry.IMAGE
+    };
+
+    private static final String[] MOVIE_COLUMNS_FAVORITES = {
+            MovieContract.FavoriteEntry.TABLE_NAME+"."+ MovieContract.FavoriteEntry.MOVIE_ID,
+            MovieContract.FavoriteEntry.IMAGE
+    };
+    static final int COL_MOVIE_ID = 0;
+    static final int COL_MOVIE_MOVIE_ID = 1;
+    static final int COL_MOVIE_IMAGE = 2;
 
     public MainActivityFragment() {
     }
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
+        sortOrder = Utility.getSortOrder(getActivity());
+
+        if(savedInstanceState == null) {
             // add movie objects to the array adapter
-            mList = new ArrayList<Movie>();
-        }
-        else {
-            mList = savedInstanceState.getParcelableArrayList("movies");
-            System.out.println("exe1");
+      //      mList = sortOrder;
         }
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("movies", mList);
+      //  outState.putParcelableArrayList("movies", mList);
         super.onSaveInstanceState(outState);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        movieAdapter = new MovieAdapter(getActivity(),null,0);
+
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sortOrder = prefs.getString(getString(R.string.sort_key),
-                getString(R.string.default_sort_value));
-
-        Uri movieDetailsURI=null;
-        if(sortOrder.equals("Most Popular")) {
-            movieDetailsURI = MovieContract.MostPopularEntry.CONTENT_URI;
-        }else if(sortOrder.equals("Highest Rated")){
-            movieDetailsURI = MovieContract.HighestRatedEntry.CONTENT_URI;
-        }else if(sortOrder.equals("Favorites")){
-            movieDetailsURI = MovieContract.FavoriteEntry.CONTENT_URI;
-        }
-
-        Cursor cur = getActivity().getContentResolver().query(movieDetailsURI, //pull only movies that user wants to see, either most popular or highest rated
-                null, null,null, null);
-
-        movieAdapter = new MovieAdapter(getActivity(),cur,0);
 
         GridView gridView = (GridView) rootView.findViewById(R.id.gridview);
         gridView.setAdapter(movieAdapter);
@@ -83,48 +93,127 @@ public class MainActivityFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Movie item = (Movie) movieAdapter.getItem(i);
 
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                // if it cannot seek to that position.
 
-                //after movie is selected, get movie reviews
-                try {
-                    reviews = movieTask.getMovieReview(item.tableID,item.id);
+                if(sortOrder.equals("Most Popular")) {
+                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                        if (cursor != null) {
+                            System.out.println("movie id is: "+cursor.getLong(COL_MOVIE_ID)+"URI"+MovieContract.MostPopularTrailers.buildTrailer(
+                                    cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
+                            ));
+                            Intent intent = new Intent(getActivity(), MovieDetail.class)
+                                    .setData(MovieContract.MostPopularTrailers.buildTrailer(
+                                            cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
+                                    ))
+                                    .putExtra("sortOrder", sortOrder);
+                            startActivity(intent);
+                        }
+                }else if(sortOrder.equals("Highest Rated")){
+                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
+                    if (cursor != null) {
+                        System.out.println("movie id is: " + cursor.getLong(COL_MOVIE_ID) + "URI" + MovieContract.HighestRatedTrailers.buildTrailer(
+                                cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
+                        ));
+                        Intent intent = new Intent(getActivity(), MovieDetail.class)
+                                .setData(MovieContract.HighestRatedTrailers.buildTrailer(
+                                        cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
+                                ))
+                                .putExtra("sortOrder", sortOrder);
+                        startActivity(intent);
+                    }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                }else if(sortOrder.equals("Favorites")) {
+                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                    if (cursor != null) {
+                        System.out.println("movie id is: "+cursor.getLong(COL_MOVIE_ID)+"URI"+MovieContract.FavoriteTrailers.buildTrailer(
+                                cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
+                        ));
+                        Intent intent = new Intent(getActivity(), MovieDetail.class)
+                                .setData(MovieContract.FavoriteTrailers.buildTrailer(
+                                        cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
+                                ));
+                        startActivity(intent);
+                    }
                 }
-                //create intent for placeholder fragment
-                Intent intent = new Intent();
-
-                intent.setClass(getActivity(), MovieDetail.class)
-                        .putExtra("selectedMovie",item)
-                        .putExtra("selectedMovieReview", reviews);
-                startActivity(intent);
-
             }
         });
 
         return rootView;
     }
-    
-    public void onStart(){
-        //pull Json information
-        loadMovies();
-        super.onStart();
 
+    void onSortChanged(){
+        Uri movieDetailsURI=null;
+        Cursor checkTable=null;
+        sortOrder = Utility.getSortOrder(getActivity());
+
+        if(sortOrder.equals("Most Popular")) {
+            movieDetailsURI = MovieContract.MostPopularEntry.CONTENT_URI;
+
+            checkTable = getActivity().getContentResolver().query(movieDetailsURI,
+                    null, null, null, sortOrder);
+            System.out.println("sort order amount in cursor: " + checkTable.getCount());
+
+        }else if(sortOrder.equals("Highest Rated")){
+            movieDetailsURI = MovieContract.HighestRatedEntry.CONTENT_URI;
+            checkTable = getActivity().getContentResolver().query(movieDetailsURI,
+                    null, null, null, sortOrder);
+            System.out.println("sort order amount in cursor: " + sortOrder);
+
+        }
+//movies will not reload if they are already in the database
+    if(checkTable.getCount()<1&&sortOrder.equals("Highest Rated")) {
+        Toast.makeText(getActivity(), "Data loading, please wait.",
+                Toast.LENGTH_LONG).show();
+        getLoaderManager().restartLoader(Popular_MOVIE_LOADER, null, this);
+        System.out.println("loader manager executed: ");
+
+    }else{
+        getLoaderManager().restartLoader(Popular_MOVIE_LOADER, null, this);
     }
 
-    public void loadMovies(){
-
-        movieTask = new loadMovieInfo(getActivity());
-        movieTask.execute(sortOrder);
 
     }
+  /*  public void loadMovies() {
+        MovieSyncAdapter.syncImmediately(getActivity());
+        System.out.println("loadMovies synced");
+    }   */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        sortOrder = Utility.getSortOrder(getActivity());
 
+        Uri movieDetailsURI=null;
+        if(sortOrder.equals("Most Popular")) {
+            movieDetailsURI = MovieContract.MostPopularEntry.CONTENT_URI;
+            return new CursorLoader(getActivity(),movieDetailsURI, MOVIE_COLUMNS_MOST_POPULAR,null,null,null);
+        }else if(sortOrder.equals("Highest Rated")){
+            movieDetailsURI = MovieContract.HighestRatedEntry.CONTENT_URI;
+            return new CursorLoader(getActivity(),movieDetailsURI, MOVIE_COLUMNS_HIGHEST_RATED,null,null,null);
+        }else if(sortOrder.equals("Favorites")){
+            movieDetailsURI = MovieContract.FavoriteEntry.CONTENT_URI;
+            return new CursorLoader(getActivity(),movieDetailsURI, MOVIE_COLUMNS_FAVORITES,null,null,null);
+        }
 
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        movieAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        movieAdapter.swapCursor(null);
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(Popular_MOVIE_LOADER, null, this);
+
+        super.onActivityCreated(savedInstanceState);
+    }
 
 }
 

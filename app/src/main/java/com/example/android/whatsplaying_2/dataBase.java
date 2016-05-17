@@ -64,7 +64,7 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
 
         togglePosition=toggle;
     }
-    public Boolean getTogglePosition(String movieid){
+    public Boolean getTogglePosition(String movieid){       //should the favorites button be checked
         //get database
         MovieDbHelper mOpenHelper;
         mOpenHelper = new MovieDbHelper(mContext);
@@ -72,7 +72,7 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
 
         Uri movieURI = MovieContract.FavoriteEntry.CONTENT_URI;       //uri to table that data needs to be inserted in
 
-        Cursor cursorMovie = mOpenHelper.getReadableDatabase().query(MovieContract.FavoriteEntry.TABLE_NAME,
+        Cursor cursorMovie = mOpenHelper.getReadableDatabase().query(MovieContract.FavoriteEntry.TABLE_NAME,        // see if movie is in the favorites table
                 null,
                 MovieContract.FavoriteEntry.MOVIE_ID + " = ? ",
                 new String[]{movieid},
@@ -139,7 +139,7 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
             mContext.getContentResolver().bulkInsert(MovieContract.FavoriteTrailers.CONTENT_URI, cvArray);
 
         }
-
+/*
 
         if(sortOrder.equals("Most Popular")) {
             //make uri to get movie reviews
@@ -182,10 +182,21 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
                 cursorReview.close();
 
             }
+        }*/
+
+        Vector<ContentValues> cVVectorReview = new Vector<ContentValues>(trailers.length);
+
+        for (int i = 0; i < reviews.length; i++) {
+
+            ContentValues MovieReview = new ContentValues();
+
+            MovieReview.put(MovieContract.FavoriteReviews.MOVIE_SELECTED_REVIEWS,movieid);
+            MovieReview.put(MovieContract.FavoriteReviews.REVIEWS, reviews[i]);
+
+            cVVectorReview.add(MovieReview);
+
         }
-
         if (cVVectorReview.size() > 0) {
-
             //insert data into the table
             ContentValues[] cvArray = new ContentValues[cVVectorReview.size()];
             cVVectorReview.toArray(cvArray);
@@ -193,7 +204,6 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
             mContext.getContentResolver().bulkInsert(MovieContract.FavoriteReviews.CONTENT_URI, cvArray);
 
         }
-
     }
 
     private void removeMovieFromTable(){

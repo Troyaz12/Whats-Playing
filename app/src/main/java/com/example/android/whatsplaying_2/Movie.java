@@ -19,14 +19,14 @@ public class Movie implements Parcelable{
     String sortOrder;
 
     public Movie (String lmovieTitle, String lreleaseDate, String lmoviePoster, String lvoteAverage,
-                  String lplotSynopsis, String movieId, Long movieTableID, String[] ltrailers, String sort){
+                  String lplotSynopsis, String movieId, String[] ltrailers, String sort,String[] reviews){
         this.movieTitle = lmovieTitle;
         this.releaseDate=lreleaseDate;
         this.moviePoster = lmoviePoster;
         this.voteAverage = lvoteAverage;
         this.plotSynopsis= lplotSynopsis;
         this.id = movieId;
-        this.tableID = movieTableID;
+      //  this.tableID = movieTableID;
 
 //        int trailerSize = ltrailers.length;
   //      trailers = new String[trailerSize];
@@ -35,9 +35,9 @@ public class Movie implements Parcelable{
       //      this.trailers[x] = ltrailers[x];
         //    System.out.println("trailers in object: " + trailers[x]);
       //  }
-
+        this.trailers = ltrailers;
         this.sortOrder = sort;
-
+        this.reviews = reviews;
     }
 
     private Movie(Parcel in){
@@ -51,6 +51,7 @@ public class Movie implements Parcelable{
 
         trailers= in.createStringArray();
         sortOrder = in.readString();
+        reviews=in.createStringArray();
 
     }
     private void addReviews(String[] reviewList){
@@ -87,7 +88,10 @@ public class Movie implements Parcelable{
             parcel.writeString(trailers[x]);
         }
         parcel.writeString(sortOrder);
-
+        parcel.writeInt(reviews.length);
+        for( int x=0; x<reviews.length; x++ ){
+            parcel.writeString(reviews[x]);
+        }
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

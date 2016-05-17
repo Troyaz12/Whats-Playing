@@ -97,11 +97,17 @@ public class MovieContract {
         public static Uri buildMostPopularTrailersUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+        public static Uri buildMovieTrailerWithMovieDetails(
+                String id) {
+            return CONTENT_URI.buildUpon().appendPath(id)
+                    .appendQueryParameter(MOVIE_SELECTED_TRAILER, id).build();
+        }
         public static Uri buildTrailer(long movieSelected, long movieSelected2) {
 
             return CONTENT_URI.buildUpon().appendPath(Long.toString(movieSelected))
                     .appendQueryParameter(MOVIE_SELECTED_TRAILER, Long.toString(movieSelected2)).build();
         }
+
         public static String getMovieFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
@@ -330,9 +336,6 @@ public class MovieContract {
 
         //holds the id of the movie
         public static final String MOVIE_SELECTED_REVIEWS = "movie_selected_reviews";
-
-        //author
-        public static final String AUTHOR = "author";
 
         //review
         public static final String REVIEWS = "reviews";

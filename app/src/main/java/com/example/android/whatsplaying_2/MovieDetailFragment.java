@@ -1,6 +1,10 @@
 package com.example.android.whatsplaying_2;
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,23 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.squareup.picasso.Picasso;
+import com.example.android.whatsplaying_2.data.MovieContract;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MovieDetailFragment extends Fragment {
+public class MovieDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private ArrayAdapter<String> trailerAdapter;
     private String[] movieTrailer = {
                     "Select Trailer"};
@@ -41,9 +39,33 @@ public class MovieDetailFragment extends Fragment {
     ToggleButton toggle;
     Boolean movieInFavorites;
 
+    private static final int DETAIL_LOADER = 0;
+
+    private static final String[] MOVIE_COLUMNS = {
+            MovieContract.MostPopularEntry.TABLE_NAME + "." + MovieContract.MostPopularEntry.MOVIE_ID,
+            MovieContract.MostPopularEntry.MOVIE_TITLE,
+            MovieContract.MostPopularEntry.RELEASE_DATE,
+            MovieContract.MostPopularEntry.VOTE_AVERAGE,
+            MovieContract.MostPopularEntry.IMAGE,
+            MovieContract.MostPopularEntry.OVERVIEW,
+            MovieContract.MostPopularTrailers.TRAILER_KEY
+    };
+
+    // these constants correspond to the projection defined above, and must change if the
+    // projection changes
+    private static final int COL_MOVIE_ID = 0;
+    private static final int COL_MOVIE_TITLE = 1;
+    private static final int COL_RELEASE_DATE = 2;
+    private static final int COL_VOTE_AVERAGE = 3;
+    private static final int COL_IMAGE = 4;
+    private static final int COL_OVERVIEW = 4;
+    private static final int COL_TRAILER_KEY = 4;
+
+
+
     public MovieDetailFragment() {
     }
-
+/*
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
@@ -51,21 +73,21 @@ public class MovieDetailFragment extends Fragment {
         if(savedInstanceState == null) {
             // add movie objects to the array adapter
             //grab intent
-            Intent i = getActivity().getIntent();
+  //          Intent i = getActivity().getIntent();
             //get bundle from intent
-            b = i.getExtras();
+   //         b = i.getExtras();
 
-            if (b != null) {
+     /*       if (b != null) {
                 //get movie object from bundle
                 movie = b.getParcelable("selectedMovie");
                 reviews = b.getStringArray("selectedMovieReview");
                 System.out.println("exe2");
                 System.out.println("Movie Title: "+movie.movieTitle);
             }
+*/
 
-
-        }
-        else {
+//}
+ /*       else {
             movie = savedInstanceState.getParcelable("movieSaved");
             reviews = savedInstanceState.getStringArray("movieReviewSaved");
 
@@ -74,15 +96,15 @@ public class MovieDetailFragment extends Fragment {
         }
         movieTaskDetail = new dataBase(getActivity(),movie);   //create a instance of the database class
         movieInFavorites = movieTaskDetail.getTogglePosition(movie.getId());
-
-    }
+*/
+//    }
 
 
       @Override
   public void onSaveInstanceState(Bundle outState) {
           super.onSaveInstanceState(outState);
-          outState.putParcelable("movieSaved", movie);
-          outState.putStringArray("movieReviewSaved", reviews);
+  //        outState.putParcelable("movieSaved", movie);
+    //      outState.putStringArray("movieReviewSaved", reviews);
 
       }
 
@@ -92,8 +114,8 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_movie_detail, container,false);
-
+        View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+/*
         TextView title = (TextView) rootView.findViewById(R.id.textTitle);
         TextView releaseDate = (TextView) rootView.findViewById(R.id.textReleaseDate);
         TextView VoteAve = (TextView) rootView.findViewById(R.id.textVoteAve);
@@ -151,9 +173,9 @@ public class MovieDetailFragment extends Fragment {
         if(movieInFavorites.equals(true)){
             toggle.setChecked(true);
         }
-
+*/
         //set onclick listener for toggle button
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+ /*       toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     togglePosition=true;
@@ -170,12 +192,62 @@ public class MovieDetailFragment extends Fragment {
             }
         });
 
-
+*/
 
 
         return rootView;
 
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Intent intent = getActivity().getIntent();
+        if (intent == null) {
+            return null;
+        }
+            System.out.println("Oncreateloader executed");
+        // Now create and return a CursorLoader that will take care of
+        // creating a Cursor for the data being displayed.
+        return new CursorLoader(
+                getActivity(),
+                intent.getData(),
+                MOVIE_COLUMNS,
+                null,
+                null,
+                null
+        );
+    }
+
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        System.out.println("On load finished");
+        if (!data.moveToFirst()) { return; }
+
+        String title = data.getString(COL_MOVIE_TITLE);
+        System.out.println("here is the movie title: "+title);
+        TextView detailTextView = (TextView)getView().findViewById(R.id.textTitle);
+        detailTextView.setText(title);
+
+        String releaseDate = data.getString(COL_RELEASE_DATE);
+        System.out.println("here is the movie title: "+releaseDate);
+
+        TextView releaseDateTextView = (TextView)getView().findViewById(R.id.textReleaseDate);
+        releaseDateTextView.setText(releaseDate);
+
+
+        // If onCreateOptionsMenu has already happened, we need to update the share intent now.
+    //    if (mShareActionProvider != null) {
+      //      mShareActionProvider.setShareIntent(createShareForecastIntent());
+     //   }
+
+
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) { }
+
 
     public class MyOnItemSelectedListener implements AdapterView.OnItemSelectedListener {       //listener for the trailer spinner
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -190,5 +262,6 @@ public class MovieDetailFragment extends Fragment {
         public void onNothingSelected(AdapterView parent) {
             // Do nothing.
         }
+
     }
 }
