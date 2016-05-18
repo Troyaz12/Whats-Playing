@@ -13,8 +13,9 @@ import com.facebook.stetho.Stetho;
 
 public class MainActivity extends AppCompatActivity {
     private String mSortOrder;
-    private final String MAINACTIVITY_TAG = "MATAG";
+    private static final String MOVIEDETAIL_TAG = "MDTAG";
     public Handler handler = new Handler();
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +24,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MainActivityFragment(), MAINACTIVITY_TAG)
-                    .commit();
+
+        if (findViewById(R.id.movie_detail_container)!=null){
+            //two pane mode tablet computers
+            mTwoPane = true;
+
+            if (savedInstanceState==null){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, new MovieDetail.MovieDetailFragment(), MOVIEDETAIL_TAG)
+                        .commit();
+            }else{
+                mTwoPane=false;
+            }
+
+
         }
 
         final Context context =this;
@@ -70,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         String sortOrder = Utility.getSortOrder(this);
 
         if (sortOrder != null && !sortOrder.equals(mSortOrder)) {
-            MainActivityFragment mf = (MainActivityFragment)getSupportFragmentManager().findFragmentByTag(MAINACTIVITY_TAG);
+            MainActivityFragment mf = (MainActivityFragment)getSupportFragmentManager().findFragmentByTag(MOVIEDETAIL_TAG);
             if ( null != mf ) {
                 mf.onSortChanged();
             }

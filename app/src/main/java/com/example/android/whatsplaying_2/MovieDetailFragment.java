@@ -202,7 +202,7 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Intent intent = getActivity().getIntent();
-        if (intent == null) {
+        if (intent == null||intent.getData()==null) {
             return null;
         }
             System.out.println("Oncreateloader executed");

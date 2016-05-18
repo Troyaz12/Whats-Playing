@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_main.xml",
+        "source": "/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/src/main/res/layout-sw600dp/activity_main.xml"
+    },
+    {
+        "merged": "/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/design_layout_snackbar.xml",
+        "source": "/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/exploded-aar/com.android.support/design/23.2.1/res/layout-sw600dp-v13/design_layout_snackbar.xml"
+    }
+]

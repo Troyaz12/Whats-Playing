@@ -143,7 +143,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         return rootView;
     }
-
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Uri dateUri);
+    }
     void onSortChanged(){
         Uri movieDetailsURI=null;
         Cursor checkTable=null;
