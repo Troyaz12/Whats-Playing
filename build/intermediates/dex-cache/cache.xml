@@ -47,7 +47,7 @@
         jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         revision="23.0.1"
-        sha1="3e2aa5f9044d88577edd10887a5ab40768cd4b43">
+        sha1="ed711990622588451af3991ce1522385c7c447a1">
         <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_e62b641618ad3a45696aa3f88e1b43347ad6be37/classes.dex" />
     </item>
     <item
@@ -89,7 +89,7 @@
         jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.1"
-        sha1="8497b17643c35eea076c605b8fc76e92f8ed4057">
+        sha1="17936dfc6fb552aef90dd1025c4e27c7b66c4536">
         <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_953e50ab4e9602b6b48db8a4ac05c978123e512e/classes.dex" />
     </item>
     <item
