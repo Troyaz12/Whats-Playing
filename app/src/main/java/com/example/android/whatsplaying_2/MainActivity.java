@@ -1,20 +1,17 @@
 package com.example.android.whatsplaying_2;
 
-import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.whatsplaying_2.sync.MovieSyncAdapter;
-import com.facebook.stetho.Stetho;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callback{
     private String mSortOrder;
     private static final String MOVIEDETAIL_TAG = "MDTAG";
-    public Handler handler = new Handler();
     private boolean mTwoPane;
 
     @Override
@@ -24,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        MovieSyncAdapter.initializeSyncAdapter(this);
 
         if (findViewById(R.id.movie_detail_container)!=null){
             //two pane mode tablet computers
@@ -33,23 +31,10 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.movie_detail_container, new MovieDetail.MovieDetailFragment(), MOVIEDETAIL_TAG)
                         .commit();
-            }else{
-                mTwoPane=false;
             }
-
-
+        }else{
+            mTwoPane=false;
         }
-
-        final Context context =this;
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(context)
-                        //  .enableDumpapp(new SampleDumperPluginsProvider(context))
-                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
-                        .build()
-        );
-
-        MovieSyncAdapter.initializeSyncAdapter(this);
-
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,12 +66,39 @@ public class MainActivity extends AppCompatActivity {
         String sortOrder = Utility.getSortOrder(this);
 
         if (sortOrder != null && !sortOrder.equals(mSortOrder)) {
-            MainActivityFragment mf = (MainActivityFragment)getSupportFragmentManager().findFragmentByTag(MOVIEDETAIL_TAG);
+            MainActivityFragment mf = (MainActivityFragment)getSupportFragmentManager().findFragmentById(R.id.movie_fragment);
             if ( null != mf ) {
                 mf.onSortChanged();
             }
+            MovieDetail.MovieDetailFragment mdf = (MovieDetail.MovieDetailFragment)getSupportFragmentManager().findFragmentByTag(MOVIEDETAIL_TAG);
+            if(null!=mdf){
+                MovieDetail.MovieDetailFragment fragment = new MovieDetail.MovieDetailFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, fragment,MOVIEDETAIL_TAG)
+                        .commit();
+            }
             mSortOrder = sortOrder;
         }
+
+    }
+    public void onItemSelected(Uri contentUri){  //need to figure out how to add sortOrder
+        if(mTwoPane){
+        //for two pane mode, show detail view in this activity by changing the detail frament through a fragment transaction
+            Bundle args = new Bundle();
+            args.putParcelable(MovieDetail.MovieDetailFragment.DETAIL_URI, contentUri);
+
+            MovieDetail.MovieDetailFragment fragment = new MovieDetail.MovieDetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment,MOVIEDETAIL_TAG)
+                    .commit();
+        }else{
+            Intent intent = new Intent(this, MovieDetail.class)
+                .setData(contentUri);
+            startActivity(intent);
+        }
+
 
     }
 }

@@ -107,7 +107,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
                 MovieContract.FavoriteTrailers.TRAILER_KEY + " TEXT NOT NULL, " +
                 // Set up foreign key from mostpopularentry table to mostpopulartrailers.
                 " FOREIGN KEY (" + MovieContract.FavoriteTrailers.MOVIE_SELECTED_TRAILER + ") REFERENCES " +
-                MovieContract.FavoriteEntry.TABLE_NAME + " (" +  MovieContract.FavoriteEntry._ID + ") " +
+                MovieContract.FavoriteEntry.TABLE_NAME + " (" +  MovieContract.FavoriteEntry.MOVIE_ID + ") " +
 
                 " );";
 
@@ -117,7 +117,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
                 MovieContract.FavoriteReviews.REVIEWS + " TEXT NOT NULL, " +
                 // Set up foreign key from mostpopularentry table to mostpopularmoviereviews.
                 " FOREIGN KEY (" + MovieContract.FavoriteReviews.MOVIE_SELECTED_REVIEWS + ") REFERENCES " +
-                MovieContract.FavoriteEntry.TABLE_NAME + " (" + MovieContract.FavoriteEntry._ID + ") " +
+                MovieContract.FavoriteEntry.TABLE_NAME + " (" + MovieContract.FavoriteEntry.MOVIE_ID + ") " +
                 " );";
 
         sqLiteDatabase.execSQL(SQL_CREATE_MOST_POPULAR_TABLE);

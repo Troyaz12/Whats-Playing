@@ -71,9 +71,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
 
         Uri.Builder builder;
 
-        //  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //  sortOrder = prefs.getString(this.getString(R.string.sort_key), this.getString(R.string.default_sort_value));
-
         try {
             //building path to website to pull data
                 builder = new Uri.Builder();
@@ -159,9 +156,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
 
         Uri.Builder builder;
 
-        //  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //  sortOrder = prefs.getString(this.getString(R.string.sort_key), this.getString(R.string.default_sort_value));
-
         try {
             //building path to website to pull data
             builder = new Uri.Builder();
@@ -237,7 +231,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
         JSONArray movieArray = movieJSON.getJSONArray(getResults);
 
         //this will hold movie objects
-        // Movie[] moviesPlaying = new Movie[movieArray.length()];
         Vector<ContentValues> cVVector = new Vector<ContentValues>(movieArray.length());
         String trailerKey;
         //if movie has no trailers
@@ -245,7 +238,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
             trailerKey = "No Trailer Available";
 
             //add trailer into the database
-            //       addMovieTrailer(movieTableID, trailerKey);
 
             ContentValues MovieTrailer = new ContentValues();
 
@@ -270,7 +262,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
             }
 
             //add trailer into the database
-            //       addMovieTrailer(movieTableID, trailerKey);
 
             ContentValues MovieTrailer = new ContentValues();
 
@@ -310,9 +301,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
         //get movie info and put it into a JSONArray
         JSONObject movieJSON = new JSONObject(movieJsonStr);
         JSONArray movieArray = movieJSON.getJSONArray(getResults);
-        Uri movieTrailersURI=null;
-        //this will hold movie objects
-        // Movie[] moviesPlaying = new Movie[movieArray.length()];
+
         Vector<ContentValues> cVVector = new Vector<ContentValues>(movieArray.length());
 
         for (int i = 0; i < movieArray.length(); i++) {
@@ -338,21 +327,11 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
                 movies.put(MovieContract.MostPopularEntry.RELEASE_DATE, releaseDate);
                 movies.put(MovieContract.MostPopularEntry.VOTE_AVERAGE, voteAverage);
                 movies.put(MovieContract.MostPopularEntry.OVERVIEW, plot);
-                //   movies.put(MovieContract.MostPopularEntry.SORT_ORDER, sortOrder);
-
 
             cVVector.add(movies);
         }
 
         if (cVVector.size() > 0) {
-
-/*
-        if(queryTable.equals("Highest Rated"))
-            db.delete(MovieContract.MostPopularEntry.TABLE_NAME, MovieContract.MostPopularEntry.SORT_ORDER + " = ?", new String[] {"Highest Rated"});
-
-            if(queryTable.equals("Most Popular"))
-                db.delete(MovieContract.MostPopularEntry.TABLE_NAME, MovieContract.MostPopularEntry.SORT_ORDER + " = ?", new String[] {"Most Popular"});
-*/
 
                 // delete old data so we don't build up an endless history
                 getContext().getContentResolver().delete(MovieContract.MostPopularEntry.CONTENT_URI,
@@ -389,19 +368,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
         int cursorRecords = cur.getCount();
         System.out.println("records" +cursorRecords);
 
-
-        int cursorRecords2;
-        //    Movie[] moviesPlaying = new Movie[cursorRecords];
-
-
-        String findTitle;
-
-        Long insertMovie_Selected_trailer_id;
-        String insertTrailer=null;
-
-        //  String[] trailers = new String[cursorRecords];
-        String[] trailers;
-
         movieTableID = new Long[cursorRecords];
         movieID = new String[cursorRecords];
 
@@ -420,54 +386,8 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
                 //load movie trailers
                 getMovieTrailer(insertTableID, insertMovie_id);
 
-/*
-                if(sortOrder.equals("Most Popular")) {
-                    //put trailers in a cursor
-                    movieTrailersURI = MovieContract.MostPopularTrailers.buildTrailer(insertTableID, insertTableID);
-                }else if(sortOrder.equals("Highest Rated")){
-                    movieTrailersURI = MovieContract.HighestRatedTrailers.buildTrailer(insertTableID, insertTableID);
-                } else if(sortOrder.equals("Favorites")) {
-                    movieTrailersURI = MovieContract.FavoriteTrailers.buildTrailer(insertTableID, insertTableID);
-                }
-
-                Cursor curTrailer = this.getContentResolver().query(movieTrailersURI,
-                        null, null, null, null);
-                cursorRecords2 = curTrailer.getCount();
-                trailers = new String[cursorRecords2];
-                System.out.println("Trailer uri: "+movieTrailersURI+ " number of records: "+cursorRecords2);
-//put trailers in a string array so they can be passed into a movie object
-                if (curTrailer.moveToFirst()) {
-                    for (int x = 0; x < cursorRecords2; x++) {
-                        insertMovie_Selected_trailer_id = curTrailer.getLong(curTrailer.getColumnIndex("movie_selected_Trailer"));
-                        if(insertMovie_Selected_trailer_id.equals(insertTableID)) {
-                            insertTrailer = curTrailer.getString(curTrailer.getColumnIndex("trailer_key"));
-                            findTitle = curTrailer.getString(curTrailer.getColumnIndex("title"));
-                            System.out.println("Its in the curserTrailer: " +findTitle);
-                            trailers[x] = insertTrailer;
-                        }
-                        curTrailer.moveToNext();
-                    }
-                }
-
-                int numtrailers = trailers.length;
-                for (int x = 0; x < numtrailers; x++) {
-                    System.out.println("trailers in array: " +trailers[x]);
-                }
-
-                insertMovieTitle= cur.getString(cur.getColumnIndex("title"));
-                insertMoviePoster= cur.getString(cur.getColumnIndex("image"));
-                insertMoviePlotSynopsis= cur.getString(cur.getColumnIndex("overview"));
-                insertMovieVoteAverage= cur.getString(cur.getColumnIndex("vote_average"));
-                insertMovieReleaseDate= cur.getString(cur.getColumnIndex("release_date"));
-
-                System.out.println("Movie Info: "+insertMovieTitle+insertMoviePoster);
-
-//pass data into the movie object
-       //         moviesPlaying[i] = new Movie(insertMovieTitle, insertMovieReleaseDate, insertMoviePoster, insertMovieVoteAverage, insertMoviePlotSynopsis, insertMovie_id, trailers,sortOrder);
-*/
                 //movie to next row in cursor
                 cur.moveToNext();
-                //               curTrailer.close();
             }
             cur.close();
         }
@@ -479,8 +399,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
 
                         LoadMovieReviews newRevs = new LoadMovieReviews(getContext(), movieTableID, movieID, sortOrder);
                         newRevs.execute();
-                        // getMovieReview(insertTableID,insertMovie_id);
-
                     }
                 }, 32000);
             }
@@ -496,8 +414,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
 
                         LoadHighestRated highestRatedExe = new LoadHighestRated(getContext());
                         highestRatedExe.execute();
-                        // getMovieReview(insertTableID,insertMovie_id);
-
                     }
                 }, 64000);
             }

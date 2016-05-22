@@ -96,10 +96,6 @@
         "source": "/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/src/main/res/layout/list_item_trailers.xml"
     },
     {
-        "merged": "/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/res/merged/debug/layout/content_movie_detail.xml",
-        "source": "/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/src/main/res/layout/content_movie_detail.xml"
-    },
-    {
         "merged": "/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow.xml",
         "source": "/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/res/layout/notification_template_big_media_narrow.xml"
     },

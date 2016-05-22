@@ -20,8 +20,8 @@ public class Utility {
     private static final int COL_IMAGE = 4;
     private static final int COL_OVERVIEW = 5;
     private static final int COL_TRAILER_KEY = 6;
-    private static final int COL_REVIEW_AUTHOR = 7;
-    private static final int COL_REVIEW_REVIEW_INFO = 8;
+    private static final int COL_REVIEW_REVIEW_INFO = 7;
+    private static final int COL_REVIEW_AUTHOR = 8;
 
 
     public static String getSortOrder(Context context) {
@@ -37,10 +37,8 @@ public class Utility {
         if(!data.getString(COL_TRAILER_KEY).equalsIgnoreCase("No Trailer Available")) {
             //loop through cursor to get all trailers
             for (int i = 1; i < data.getCount() + 1; i++) {
-                //    boolean isInArray=false;
                 if(!lista.contains(data.getString(COL_TRAILER_KEY))){
                     lista.add(data.getString(COL_TRAILER_KEY));
-                    //   System.out.println("Array Trailer: " + trailer[i]);
                     data.moveToNext();
                 }else{
                     data.moveToNext();
@@ -63,24 +61,41 @@ public class Utility {
         List<String> lista = new ArrayList<String>();
 
         data.moveToFirst();
-        if(!data.getString(COL_REVIEW_AUTHOR).equalsIgnoreCase("No Reviews Available")) {
-            //loop through cursor to get all trailers
-            for (int i = 1; i < data.getCount() + 1; i++) {
-                //    boolean isInArray=false;
 
-                String insertReviewAuthor = data.getString(COL_REVIEW_AUTHOR);
-                String insertReview = data.getString(COL_REVIEW_REVIEW_INFO);
+        if(!Utility.getSortOrder(context).equalsIgnoreCase("Favorites")) {
+            if (!data.getString(COL_REVIEW_AUTHOR).equalsIgnoreCase("No Reviews Available")) {
+                //loop through cursor to get all reviews
+                for (int i = 0; i < data.getCount(); i++) {
+                    //    boolean isInArray=false;
 
-                if(!lista.contains(data.getString(COL_REVIEW_AUTHOR))){
-                    lista.add(context.getString(R.string.Author) + insertReviewAuthor + "\n" + "\n" + insertReview + "\n"+"\n");
-                    //   System.out.println("Array Trailer: " + trailer[i]);
-                    data.moveToNext();
-                }else{
-                    data.moveToNext();
+                    String insertReviewAuthor = data.getString(COL_REVIEW_AUTHOR);
+                    String insertReview = data.getString(COL_REVIEW_REVIEW_INFO);
+                    String totalReview = context.getString(R.string.Author) + insertReviewAuthor + "\n" + "\n" + insertReview + "\n" + "\n";
+
+                    if (!lista.contains(totalReview)) {
+                        lista.add(totalReview);
+                        data.moveToNext();
+                    } else {
+                        data.moveToNext();
+                    }
+                }
+            }
+        }else{
+            if (!data.getString(COL_REVIEW_REVIEW_INFO).equalsIgnoreCase("No Reviews Available")) {
+                //loop through cursor to get all trailers
+                for (int i = 0; i < data.getCount(); i++) {
+                    String insertReview = data.getString(COL_REVIEW_REVIEW_INFO);
+                    String totalReview = insertReview + "\n" + "\n";
+                    if (!lista.contains(totalReview)) {
+                        System.out.println(totalReview);
+                        lista.add(totalReview);
+                        data.moveToNext();
+                    } else {
+                        data.moveToNext();
+                    }
                 }
             }
         }
-
         String[] reviews;
         if(lista.size()<1){
             reviews = new String[1];

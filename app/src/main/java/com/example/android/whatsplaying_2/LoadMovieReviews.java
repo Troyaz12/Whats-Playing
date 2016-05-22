@@ -59,9 +59,6 @@ public class LoadMovieReviews extends AsyncTask<Void, Void, Void>{
 
             Uri.Builder builder;
 
-            //  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            //  sortOrder = prefs.getString(this.getString(R.string.sort_key), this.getString(R.string.default_sort_value));
-
             try {
                 //building path to website to pull data
                 builder = new Uri.Builder();
@@ -158,7 +155,6 @@ public class LoadMovieReviews extends AsyncTask<Void, Void, Void>{
                     String author = movie.getString(getAuthor);
 
                     //add trailer into the database
-                    // addMovieReview(movieTableID, review, author);
 
                     ContentValues MovieReview = new ContentValues();
 

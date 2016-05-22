@@ -32,23 +32,23 @@ public class MovieDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         if (savedInstanceState == null) {
+
+            Bundle args = new Bundle();
+            args.putParcelable(MovieDetail.MovieDetailFragment.DETAIL_URI, getIntent().getData());          //get uri for one pane mode
+
+            MovieDetail.MovieDetailFragment fragment = new MovieDetail.MovieDetailFragment();
+            fragment.setArguments(args);
+
             getSupportFragmentManager().beginTransaction()
-                   // .add(R.id.container, new MovieDetailFragment())
-                    .add(R.id.movie_detail_container, new MovieDetailFragment())
+                 .add(R.id.movie_detail_container,fragment)
                     .commit();
         }
     }
 
     public static class MovieDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
         private ArrayAdapter<String> trailerAdapter;
-        private String[] movieTrailer = {
-                "Select Trailer"};
         public Movie movie;
-        Bundle b;
-        List<String> trailerList;
         private String[] spinnerLabels;
-        private ArrayAdapter<String> reviewAdapter;
-        List<String> reviewList;
         dataBase movieTaskDetail;
         Boolean togglePosition;      //toggle position of add favorite movie toggle button
         ToggleButton toggle;
@@ -56,8 +56,17 @@ public class MovieDetail extends AppCompatActivity {
         public String[] trailer;
         public String[] reviews;
         public String sortOrder;
-
+        static final String DETAIL_URI = "URI";
         private static final int DETAIL_LOADER = 0;
+        private Uri mUri;
+
+        TextView detailTextView;
+        TextView releaseDateTextView;
+        TextView voteAverageTextView;
+        ImageView PosterDetail;
+        TextView overviewTextView;
+        TextView review;
+
 
         private static final String[] MOST_POPULAR_MOVIE_COLUMNS = {
                 MovieContract.MostPopularEntry.TABLE_NAME + "." + MovieContract.MostPopularEntry.MOVIE_ID,
@@ -67,8 +76,8 @@ public class MovieDetail extends AppCompatActivity {
                 MovieContract.MostPopularEntry.IMAGE,
                 MovieContract.MostPopularEntry.OVERVIEW,
                 MovieContract.MostPopularTrailers.TRAILER_KEY,
-                MovieContract.MostPopularReviews.AUTHOR,
-                MovieContract.MostPopularReviews.REVIEWS
+                MovieContract.MostPopularReviews.REVIEWS,
+                MovieContract.MostPopularReviews.AUTHOR
 
         };
 
@@ -80,8 +89,9 @@ public class MovieDetail extends AppCompatActivity {
                 MovieContract.HighestRatedEntry.IMAGE,
                 MovieContract.HighestRatedEntry.OVERVIEW,
                 MovieContract.HighestRatedTrailers.TRAILER_KEY,
-                MovieContract.HighestRatedReviews.AUTHOR,
-                MovieContract.HighestRatedReviews.REVIEWS
+                MovieContract.HighestRatedReviews.REVIEWS,
+                MovieContract.HighestRatedReviews.AUTHOR
+
         };
 
         private static final String[] FAVORITE_MOVIE_COLUMNS = {
@@ -93,7 +103,6 @@ public class MovieDetail extends AppCompatActivity {
                 MovieContract.FavoriteEntry.OVERVIEW,
                 MovieContract.FavoriteTrailers.TRAILER_KEY,
                 MovieContract.FavoriteReviews.REVIEWS
-
         };
 
 
@@ -106,106 +115,40 @@ public class MovieDetail extends AppCompatActivity {
         private static final int COL_IMAGE = 4;
         private static final int COL_OVERVIEW = 5;
         private static final int COL_TRAILER_KEY = 6;
-        private static final int COL_REVIEW_AUTHOR = 7;
-        private static final int COL_REVIEW_REVIEW_INFO = 8;
+        private static final int COL_REVIEW_REVIEW_INFO = 7;
+        private static final int COL_REVIEW_AUTHOR = 8;
+
 
 
         public MovieDetailFragment() {
         }
 
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
-// Restore state members from saved instance
-   //     if(savedInstanceState == null) {
-            // add movie objects to the array adapter
-            //grab intent
-  //          Intent i = getActivity().getIntent();
-            //get bundle from intent
-   //         b = i.getExtras();
-
-  //          if (b != null) {
-                //get movie object from bundle
-    //            movie = b.getParcelable("selectedMovie");
-      //          reviews = b.getStringArray("selectedMovieReview");
-        //        System.out.println("exe2");
-          //      System.out.println("Movie Title: "+movie.movieTitle);
-        //    }
-
-
-  //      }
-   //     else {
-   //         movie = savedInstanceState.getParcelable("movieSaved");
-   //         reviews = savedInstanceState.getStringArray("movieReviewSaved");
-
-   //     }
-
-    }
         @Override
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
-      //              outState.putParcelable("movieSaved", movie);
-            //      outState.putStringArray("movieReviewSaved", reviews);
 
         }
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-/*
-        TextView title = (TextView) rootView.findViewById(R.id.textTitle);
-        TextView releaseDate = (TextView) rootView.findViewById(R.id.textReleaseDate);
-        TextView VoteAve = (TextView) rootView.findViewById(R.id.textVoteAve);
-        TextView Plot = (TextView) rootView.findViewById(R.id.textPlot);
-        ImageView PosterDetail = (ImageView) rootView.findViewById(R.id.moviePosterDetail);
-        TextView review = (TextView) rootView.findViewById(R.id.textReviews);
-
-        //format reviews into a string to be passed to the review textview
-        StringBuilder builder = new StringBuilder();
-        for(String s : reviews) {
-            builder.append(s);
-        }
-
-        //get movie information
-        title.setText(movie.movieTitle);
-        releaseDate.setText("Release Date: " + movie.releaseDate);
-        VoteAve.setText("Rating: " + movie.voteAverage);
-        String Movieurl = "http://image.tmdb.org/t/p/w185" + movie.moviePoster;
-        Picasso.with(getContext()).load(Movieurl).into(PosterDetail);
-        Plot.setText(movie.plotSynopsis);
-        review.setText(builder.toString());
-
-        trailerList = new ArrayList<String>(Arrays.asList(movieTrailer));  //load Select trailer string. this is the default for the spinner
-        Collections.addAll(trailerList, movie.trailers);        //add trailer keys to list
-
-        spinnerLabels = new String[trailerList.size()];
-
-        for(int x=0; x<spinnerLabels.length; x++){
-
-            if(x==0){
-                spinnerLabels[x]="Select a Trailer";
-            }else{
-                spinnerLabels[x]="Select a Trailer " +x;
+            Bundle arguments = getArguments();
+            if (arguments != null) {
+                mUri = arguments.getParcelable(MovieDetail.MovieDetailFragment.DETAIL_URI);
             }
 
+            View rootView = inflater.inflate(R.layout.fragment_movie_detail,container,false);
 
-        }
 
-        //code for trailer spinner
-        trailerAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(), // The current context (this activity)
-                        R.layout.list_item_trailers, // The name of the layout ID.
-                        spinnerLabels);
+            //add to layouts
+            detailTextView = (TextView)rootView.findViewById(R.id.textTitle);
+            releaseDateTextView = (TextView)rootView.findViewById(R.id.textReleaseDate);
+            voteAverageTextView = (TextView)rootView.findViewById(R.id.textVoteAve);
+            PosterDetail = (ImageView) rootView.findViewById(R.id.moviePosterDetail);
+            overviewTextView = (TextView)rootView.findViewById(R.id.textPlot);
+            review = (TextView) rootView.findViewById(R.id.textReviews);
 
-        // Get a reference to the ListView, and attach this adapter to it.
-        Spinner trailerSpinner = (Spinner) rootView.findViewById(R.id.listview_Trailers);
-        trailerSpinner.setAdapter(trailerAdapter);
-
-        trailerSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
-*/
-
-            return inflater.inflate(R.layout.fragment_movie_detail,container,false);
+            return rootView;
 
         }
 
@@ -219,40 +162,40 @@ public class MovieDetail extends AppCompatActivity {
             if (intent == null) {
                 return null;
             }
+            if ( null != mUri ) {
 
-            sortOrder = Utility.getSortOrder(getActivity());
+                sortOrder = Utility.getSortOrder(getActivity());
 
-            if(sortOrder.equals("Most Popular")){
-                return new CursorLoader(
-                        getActivity(),
-                        intent.getData(),
-                        MOST_POPULAR_MOVIE_COLUMNS,
-                        null,
-                        null,
-                        null
-                );
-            }else if(sortOrder.equals("Highest Rated")){
-                System.out.println("highest rated cursor exe");
-                return new CursorLoader(
-                        getActivity(),
-                        intent.getData(),
-                        HIGHEST_RATED_MOVIE_COLUMNS,
-                        null,
-                        null,
-                        null
-                );
-            }else if(sortOrder.equals("Favorites")){
-                return new CursorLoader(
-                        getActivity(),
-                        intent.getData(),
-                        FAVORITE_MOVIE_COLUMNS,
-                        null,
-                        null,
-                        null
-                );
+                if (sortOrder.equals("Most Popular")) {
+                    return new CursorLoader(
+                            getActivity(),
+                            mUri,
+                            MOST_POPULAR_MOVIE_COLUMNS,
+                            null,
+                            null,
+                            null
+                    );
+                } else if (sortOrder.equals("Highest Rated")) {
+                    return new CursorLoader(
+                            getActivity(),
+                            mUri,
+                            HIGHEST_RATED_MOVIE_COLUMNS,
+                            null,
+                            null,
+                            null
+                    );
+                } else if (sortOrder.equals("Favorites")) {
+
+                    return new CursorLoader(
+                            getActivity(),
+                            mUri,
+                            FAVORITE_MOVIE_COLUMNS,
+                            null,
+                            null,
+                            null
+                    );
+                }
             }
-
-            System.out.println("Oncreateloader executed");
             // Now create and return a CursorLoader that will take care of
             // creating a Cursor for the data being displayed.
             return null;
@@ -261,123 +204,24 @@ public class MovieDetail extends AppCompatActivity {
 
         @Override
         public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, final Cursor data) {
-            System.out.println("On load finished "+data.getCount());
-            if (!data.moveToFirst()) { return; }
-/*
-            if(!data.getString(COL_TRAILER_KEY).equalsIgnoreCase("No Trailer Available")) {
-                trailer = new String[data.getCount() + 1];
-                trailer[0] = "Select Trailer";
-            }else{
-                trailer = new String[1];
-                trailer[0] = "No Trailer Available";
-            }
-*/
-            String title="No Title Available";
-            String releaseDate="No Release Date Available";
-            String voteAverage="No Vote Average Available";
-            String image=null;
-            String overView="No Overview Available";
+            if (!data.moveToFirst()) {
+                String title="Data is downloading. Please wait.";
+                detailTextView.setText(title);
+
+
+                return; }
+
             sortOrder = Utility.getSortOrder(getActivity());
-            System.out.println("Sort Order: "+ sortOrder);
             List<String> lista = new ArrayList<String>();
             lista.add("Select Trailer");
 
-       //     if(sortOrder.equals("Most Popular")) {
                 //get information from the cursor
                 String movie_ID = data.getString(COL_MOVIE_ID);
-                title = data.getString(COL_MOVIE_TITLE);
-                releaseDate = data.getString(COL_RELEASE_DATE);
-                voteAverage = data.getString(COL_VOTE_AVERAGE);
-                image = data.getString(COL_IMAGE);
-                overView = data.getString(COL_OVERVIEW);
-                System.out.println("Most Popular: "+ title);
-
-
-
-
-            //get trailers
- /*               data.moveToFirst();
-                if(!data.getString(COL_TRAILER_KEY).equalsIgnoreCase("No Trailer Available")) {
-                    //loop through cursor to get all trailers
-                    for (int i = 1; i < data.getCount() + 1; i++) {
-                    //    boolean isInArray=false;
-                        if(!lista.contains(data.getString(COL_TRAILER_KEY))){
-                            lista.add(data.getString(COL_TRAILER_KEY));
-                         //   System.out.println("Array Trailer: " + trailer[i]);
-                            data.moveToNext();
-                        }else{
-                            data.moveToNext();
-                        }
-                    }
-                }
-
-            data.moveToFirst();
-            if(!data.getString(COL_TRAILER_KEY).equalsIgnoreCase("No Trailer Available")) {
-                //loop through cursor to get all trailers
-                for (int i = 1; i < data.getCount() + 1; i++) {
-                    //    boolean isInArray=false;
-                    if(!lista.contains(data.getString(COL_TRAILER_KEY))){
-                        lista.add(data.getString(COL_TRAILER_KEY));
-                        //   System.out.println("Array Trailer: " + trailer[i]);
-                        data.moveToNext();
-                    }else{
-                        data.moveToNext();
-                    }
-                }
-            }
-
-*/
-
-
-         //   }else if(sortOrder.equals("Highest Rated")) {
-//get information from the cursor
- /*               title = data.getString(COL_MOVIE_TITLE);
-                releaseDate = data.getString(COL_RELEASE_DATE);
-                voteAverage = data.getString(COL_VOTE_AVERAGE);
-                image = data.getString(COL_IMAGE);
-                overView = data.getString(COL_OVERVIEW);
-                System.out.println("Highest rated: "+ title);
-                data.moveToFirst();
-                if(!data.getString(COL_TRAILER_KEY).equalsIgnoreCase("No Trailer Available")) {
-                    //loop through cursor to get all trailers
-                    for (int i = 1; i < data.getCount() + 1; i++) {
-                        //    boolean isInArray=false;
-                        if(!lista.contains(data.getString(COL_TRAILER_KEY))){
-                            lista.add(data.getString(COL_TRAILER_KEY));
-                            //   System.out.println("Array Trailer: " + trailer[i]);
-                            data.moveToNext();
-                        }else{
-                            data.moveToNext();
-                        }
-                    }
-                }
-            }else if(sortOrder.equals("Favorites")) {
-                //get information from the cursor
-                title = data.getString(COL_MOVIE_TITLE);
-                releaseDate = data.getString(COL_RELEASE_DATE);
-                voteAverage = data.getString(COL_VOTE_AVERAGE);
-                image = data.getString(COL_IMAGE);
-                overView = data.getString(COL_OVERVIEW);
-
-                data.moveToFirst();
-                if(!data.getString(COL_TRAILER_KEY).equalsIgnoreCase("No Trailer Available")) {
-
-                    //loop through cursor to get all trailers
-                    for (int i = 1; i < data.getCount() + 1; i++) {
-                        trailer[i] = data.getString(COL_TRAILER_KEY);
-                        System.out.println("Array Trailer: " + trailer[i]);
-                        data.moveToNext();
-                    }
-                }
-            }
-
-*/
- /*           if(lista.size()<1){
-                trailer = new String[1];
-                trailer[0] = "No Trailer Available";
-            }else{
-                trailer = lista.toArray(new String[lista.size()]);
-            }  */
+                String title = data.getString(COL_MOVIE_TITLE);
+                String releaseDate = data.getString(COL_RELEASE_DATE);
+                String voteAverage = data.getString(COL_VOTE_AVERAGE);
+                String image = data.getString(COL_IMAGE);
+                String overView = data.getString(COL_OVERVIEW);
 
             //get trailers and put into an array
             trailer = Utility.getTrailers(data);
@@ -403,16 +247,7 @@ public class MovieDetail extends AppCompatActivity {
                 builder.append(s);
             }
 
-            //add to layouts
-            TextView detailTextView = (TextView)getView().findViewById(R.id.textTitle);
-            TextView releaseDateTextView = (TextView)getView().findViewById(R.id.textReleaseDate);
-            TextView voteAverageTextView = (TextView)getView().findViewById(R.id.textVoteAve);
-            ImageView PosterDetail = (ImageView) getView().findViewById(R.id.moviePosterDetail);
-            TextView overviewTextView = (TextView)getView().findViewById(R.id.textPlot);
-            TextView review = (TextView) getView().findViewById(R.id.textReviews);
-
             review.setText(builder.toString());
-
 
             //code for trailer spinner
             trailerAdapter =
@@ -441,9 +276,6 @@ public class MovieDetail extends AppCompatActivity {
 
             trailerSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
 
-
-            System.out.println("here is the movie title: " + trailer);
-
             //add favorites
             toggle = (ToggleButton) getView().findViewById(R.id.addToFavorites);
 
@@ -469,21 +301,10 @@ public class MovieDetail extends AppCompatActivity {
                 }
             });
 
-
-
-
-
-
-            // If onCreateOptionsMenu has already happened, we need to update the share intent now.
-            //    if (mShareActionProvider != null) {
-            //      mShareActionProvider.setShareIntent(createShareForecastIntent());
-            //   }
-
-
         }
-
         @Override
         public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+
 
         }
 

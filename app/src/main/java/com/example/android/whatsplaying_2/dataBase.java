@@ -1,10 +1,8 @@
 package com.example.android.whatsplaying_2;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -52,6 +50,7 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
         reviews = addFavorite.getReviews();
         sortOrder = addFavorite.getSortOrder();
 
+
         if(togglePosition.equals(true))
             AddMovieToTable();
         else
@@ -68,9 +67,6 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
         //get database
         MovieDbHelper mOpenHelper;
         mOpenHelper = new MovieDbHelper(mContext);
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-
-        Uri movieURI = MovieContract.FavoriteEntry.CONTENT_URI;       //uri to table that data needs to be inserted in
 
         Cursor cursorMovie = mOpenHelper.getReadableDatabase().query(MovieContract.FavoriteEntry.TABLE_NAME,        // see if movie is in the favorites table
                 null,
@@ -79,8 +75,6 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
                 null,
                 null,
                 null);
-
-        System.out.println("count of favorite cursor: "+cursorMovie.getCount());
 
         if(cursorMovie.getCount()>0)
             togglePosition = true;
@@ -93,11 +87,7 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
     private void AddMovieToTable(){
         //uris needed
         Uri movieURI=null;
-        Uri movieFavoriteTrailers;
-        Uri movieFavoriteReviews=null;
         Uri insertedUri;
-        Cursor cursorReview;
-
 
         //put data the goes into favorite movie table into a content values object
         ContentValues movies = new ContentValues();
@@ -109,16 +99,11 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
         movies.put(MovieContract.FavoriteEntry.VOTE_AVERAGE, voteAverage);
         movies.put(MovieContract.FavoriteEntry.OVERVIEW, plot);
 
-
         movieURI = MovieContract.FavoriteEntry.CONTENT_URI;       //uri to table that data needs to be inserted in
 
         insertedUri = mContext.getContentResolver().insert(movieURI,movies);
 
-        // The resulting URI contains the ID for the row.  Extract the locationId from the Uri.
-        long favoriteTaleID = ContentUris.parseId(insertedUri);
 
-        //this will hold movie objects
-        // Movie[] moviesPlaying = new Movie[movieArray.length()];
         Vector<ContentValues> cVVectorTrailers = new Vector<ContentValues>(trailers.length);
 
         for (int i = 0; i < trailers.length; i++) {
@@ -139,57 +124,12 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
             mContext.getContentResolver().bulkInsert(MovieContract.FavoriteTrailers.CONTENT_URI, cvArray);
 
         }
-/*
 
-        if(sortOrder.equals("Most Popular")) {
-            //make uri to get movie reviews
-            movieFavoriteReviews = MovieContract.MostPopularReviews.CONTENT_URI;
-        }else if(sortOrder.equals("Highest Rated")){
-            movieFavoriteReviews = MovieContract.HighestRatedReviews.CONTENT_URI;
-        }
+        Vector<ContentValues> cVVectorReview = new Vector<ContentValues>(reviews.length);
 
-
-        // reviews
-        cursorReview = mContext.getContentResolver().query(movieFavoriteReviews,
-                null, null, null, null);
-        int numCursorRecords = cursorReview.getCount();
-
-        System.out.println("movie reviews to put in favorites table: "+numCursorRecords);
-
-        Vector<ContentValues> cVVectorReview = new Vector<ContentValues>(numCursorRecords);
-
-        String insertReviewAuthor;
-        String insertReview;
-
-        if(cursorReview!=null) {
-            if (cursorReview.moveToFirst() && cursorReview.getString(cursorReview.getColumnIndex("reviews")) != null) {
-                //insert data from cursor
-                for (int x = 0; x < numCursorRecords; x++) {
-                    insertReviewAuthor = cursorReview.getString(cursorReview.getColumnIndex("author"));
-                    insertReview = cursorReview.getString(cursorReview.getColumnIndex("reviews"));
-
-                    ContentValues MovieReview = new ContentValues();
-
-                    MovieReview.put(MovieContract.FavoriteReviews.MOVIE_SELECTED_REVIEWS,movieid);
-                    MovieReview.put(MovieContract.FavoriteReviews.AUTHOR, insertReviewAuthor);
-                    MovieReview.put(MovieContract.FavoriteReviews.REVIEWS, insertReview);
-
-                    cVVectorReview.add(MovieReview);
-
-                    cursorReview.moveToNext();
-                }
-
-                cursorReview.close();
-
-            }
-        }*/
-
-        Vector<ContentValues> cVVectorReview = new Vector<ContentValues>(trailers.length);
 
         for (int i = 0; i < reviews.length; i++) {
-
             ContentValues MovieReview = new ContentValues();
-
             MovieReview.put(MovieContract.FavoriteReviews.MOVIE_SELECTED_REVIEWS,movieid);
             MovieReview.put(MovieContract.FavoriteReviews.REVIEWS, reviews[i]);
 
@@ -207,12 +147,8 @@ public class dataBase extends AsyncTask<Movie, Void, Void> {
     }
 
     private void removeMovieFromTable(){
-        System.out.println("Remove from table executed");
         mContext.getContentResolver().delete(MovieContract.FavoriteEntry.CONTENT_URI, MovieContract.FavoriteEntry.MOVIE_ID+" = ? ", new String[]{movieid});
         mContext.getContentResolver().delete(MovieContract.FavoriteTrailers.CONTENT_URI, MovieContract.FavoriteTrailers.MOVIE_SELECTED_TRAILER+"=?",new String[]{movieid});
         mContext.getContentResolver().delete(MovieContract.FavoriteReviews.CONTENT_URI, MovieContract.FavoriteReviews.MOVIE_SELECTED_REVIEWS+"=?",new String[]{movieid});
     }
-
-
-
 }

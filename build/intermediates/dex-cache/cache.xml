@@ -1,2 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
+
+    <item
+        jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/exploded-aar/com.android.support/design/23.2.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="72961d8b453b46e277702f18de9d210bc019e36e">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.2.1_59623a253fcfc86fc15bc8d58510aecb7b1d1e03/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="3469cb457f10f74c28cbc05f069b6c894f6cbdd0">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.2.1_84c28e9a84111a99d51abf9bfa3802def135064f/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="e4d0cbb0b999604b349062f0214a0a228a7fd151">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.2.1_b3821dc2b6c644a92967358fea35df7130b14044/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/retrofit/2.0.0-beta3/97675641051febfee098903cc0eff62f2826e34e/retrofit-2.0.0-beta3.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="97675641051febfee098903cc0eff62f2826e34e">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/retrofit-2.0.0-beta3_b7e42e53cc51cb4d1516a784133dcb7f6e329d4c/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="3be474b1b21b31cf2fa93fe6bd641ae108d96452">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.2.1_d92208b0c025a2a0883df341f62997d02846706c/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.6.0/98476622f10715998eacf9240d6b479f12c66143/okio-1.6.0.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="98476622f10715998eacf9240d6b479f12c66143">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/okio-1.6.0_a07d8c3d1fd344f8d24adedfc74f7e68ee70386b/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="3e2aa5f9044d88577edd10887a5ab40768cd4b43">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_e62b641618ad3a45696aa3f88e1b43347ad6be37/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="673d77a5bbddd766037f088e775df525c46407f0">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.2.1_538168f6159219a39e0cbdf6f901fbb64e5c5332/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/2.0.1/516c03b21d50a644d538de0f0369c620989cd8f0/jsr305-2.0.1.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="516c03b21d50a644d538de0f0369c620989cd8f0">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/jsr305-2.0.1_f7d8117cc955621bba3153edba7297103e55d687/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.4/695b63d702f505b9b916e02272e3b6381bade7f/gson-2.4.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="0695b63d702f505b9b916e02272e3b6381bade7f">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.4_b7e23331f0c42a86e2d644b64c2228531179b79c/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars/libs/internal_impl-23.2.1.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="607a3d0b8013b4ccbfeb0b7cb293351994e021fb">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.2.1_4fd00df1edecf72eb5258fcc459a9c1ec5757784/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/.gradle/caches/modules-2/files-2.1/com.facebook.stetho/stetho/1.3.1/2c4076b466a0eb4d6ddf5721edd35cd1adc1f317/stetho-1.3.1.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="2c4076b466a0eb4d6ddf5721edd35cd1adc1f317">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/stetho-1.3.1_874476990f9158acd3e76e5671ee95d7cd761870/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="8497b17643c35eea076c605b8fc76e92f8ed4057">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_953e50ab4e9602b6b48db8a4ac05c978123e512e/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/converter-gson/2.0.0-beta3/8bff75d7360aaa3866f1e6949c877dfcc2b3d3e2/converter-gson-2.0.0-beta3.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="8bff75d7360aaa3866f1e6949c877dfcc2b3d3e2">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-gson-2.0.0-beta3_109ea9311b93b73dae60086e24974e7b2a091600/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.0.0-RC1/be7e96331952019f16dc52dce09ab25df29353d7/okhttp-3.0.0-RC1.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="be7e96331952019f16dc52dce09ab25df29353d7">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/okhttp-3.0.0-RC1_5f2826ef6126109d9795727888b64b45e2fad1cb/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.2/2bf96b7aa8b611c177d329452af1dc933e14501c/commons-cli-1.2.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="2bf96b7aa8b611c177d329452af1dc933e14501c">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/commons-cli-1.2_4f2ba23058928580e9fd46cac58f9bad5ec7d553/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.2.1/support-annotations-23.2.1.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="ccb693bc0774fcb637246f7360de25b4af7df318">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.2.1_73e8604fe32d4a1935a031d8dc51235ee8e36381/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.2.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="e3885783ff8926ed9e2fdcd16816c2e1e73e7aee">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.2.1_a585f7e03a1107ba52745284ca78bce3105ca092/classes.dex" />
+    </item>
+    <item
+        jar="/Users/TroysMacBook/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/Users/TroysMacBook/AndroidStudioProjects/whatsPlaying_2/app/build/intermediates/transforms/dex/debug/folders/1000/10/picasso-2.5.2_4805a9cf5eaf68d1336b02ddcacd47febcea689e/classes.dex" />
+    </item>
+
+</items>

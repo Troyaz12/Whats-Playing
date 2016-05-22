@@ -11,11 +11,6 @@
         <!--
         This layout is a two-pane layout for the Items master/detail flow.
         -->
-        <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-    </android.support.design.widget.AppBarLayout>
 
     <fragment
             android:id="@+id/movie_fragment"

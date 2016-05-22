@@ -19,7 +19,7 @@ public class MovieProvider extends ContentProvider{
     private MovieDbHelper mOpenHelper;
 
     static final int MOST_POPULAR_MOVIES = 100;
-    static final int MOST_POPULAR_MOVIES_TRAILER = 101;
+    static final int MOST_POPULAR_MOVIES_TRAILER_AND_REVIEWS = 101;
     static final int MOST_POPULAR_MOVIES_REVIEWS = 102;
     static final int MOST_POPULAR_MOVIES_DETAIL = 300;
 
@@ -28,14 +28,14 @@ public class MovieProvider extends ContentProvider{
 
 
     static final int HIGHEST_RATED_MOVIES = 105;
-    static final int HIGHEST_RATED_TRAILERS = 106;
+    static final int HIGHEST_RATED_TRAILERS_AND_REVIEWS = 106;
     static final int HIGHEST_RATED_REVIEWS = 107;
     static final int HIGHEST_RATED_REVIEWS_TABLE = 111;
     static final int HIGHEST_RATED_TRAILERS_TABLE = 112;
     static final int HIGHEST_RATED_MOVIES_TABLE = 113;
 
     static final int FAVORITE_MOVIES = 108;
-    static final int FAVORITE_TRAILERS = 109;
+    static final int FAVORITE_TRAILERS_AND_REVIEWS = 109;
     static final int FAVORITE_REVIEWS = 110;
     static final int FAVORITE_MOVIES_TABLE = 114;
     static final int FAVORITE_TRAILERS_TABLE = 115;
@@ -47,7 +47,6 @@ public class MovieProvider extends ContentProvider{
     static{
         MovieQueryBuilder = new SQLiteQueryBuilder();
         //This is an inner join which looks like
-        //weather LEFT OUTER JOIN MostPopularReviews and trailers ON MostPopularTrailers.MOVIESELECTED = MostPopularTrailers._id
 
         MovieQueryBuilder.setTables(
                 MovieContract.MostPopularEntry.TABLE_NAME +
@@ -101,7 +100,7 @@ public class MovieProvider extends ContentProvider{
     }
 
 
-    private static final String MovieTrailerSelection =
+    private static final String MovieTrailerAndReviewSelection =
             MovieContract.MostPopularEntry.TABLE_NAME +
                     "." + MovieContract.MostPopularEntry._ID + " = ? AND "+
             MovieContract.MostPopularTrailers.MOVIE_SELECTED_TRAILER + " = ? AND "+
@@ -121,7 +120,7 @@ public class MovieProvider extends ContentProvider{
             MovieContract.HighestRatedEntry.TABLE_NAME +
                     "." + MovieContract.HighestRatedEntry._ID+ " = ? ";
 
-    private static final String HighestRatedTrailerSelection =
+    private static final String HighestRatedTrailerSelectionAndReviews =
             MovieContract.HighestRatedEntry.TABLE_NAME +
                     "." + MovieContract.HighestRatedEntry._ID + " = ? AND "+
                     MovieContract.HighestRatedTrailers.MOVIE_SELECTED_TRAILER + " = ? AND "+
@@ -136,10 +135,12 @@ public class MovieProvider extends ContentProvider{
             MovieContract.FavoriteEntry.TABLE_NAME +
                     "." + MovieContract.FavoriteEntry._ID+ " = ? ";
 
-    private static final String FavoriteTrailerSelection =
+    private static final String FavoriteTrailerAndReviewSelection =
             MovieContract.FavoriteEntry.TABLE_NAME +
-                    "." + MovieContract.FavoriteEntry._ID + " = ? AND "+
-                    MovieContract.FavoriteTrailers.MOVIE_SELECTED_TRAILER + " = ? ";
+                    "." + MovieContract.FavoriteEntry.MOVIE_ID + " = ? AND "+
+                    MovieContract.FavoriteTrailers.MOVIE_SELECTED_TRAILER + " = ? AND "+
+                    MovieContract.FavoriteReviews.MOVIE_SELECTED_REVIEWS + " = ? ";
+
 
     private static final String FavoriteReviewSelection =
             MovieContract.FavoriteEntry.TABLE_NAME +
@@ -178,9 +179,6 @@ public class MovieProvider extends ContentProvider{
 
     private Cursor getMostPopularMovieDetails(Uri uri, String[] projection, String sortOrder) {
 
-        String MovieSelected = MovieContract.MostPopularEntry.getMostPopularMovieFromUri(uri);
-
-
         return MovieQueryBuilder.query(mOpenHelper.getReadableDatabase(),  //table
                 projection,         //columns to return
                 MovieDetails,               //rows wanted
@@ -191,16 +189,14 @@ public class MovieProvider extends ContentProvider{
         );
     }
 
-    private Cursor getMostPopularMovieTrailer(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getMostPopularMovieTrailerAndReviews(Uri uri, String[] projection, String sortOrder) {
 
         String MovieSelected = MovieContract.MostPopularTrailers.getMovieFromUri(uri);
         String MovieSelected2 = MovieContract.MostPopularTrailers.getMovieTrailerFromUri(uri);
-        System.out.println("URI: "+uri.toString() +"MovieSelected: "+MovieSelected + "MovieSelectedTrailer: "+MovieSelected2);
-        System.out.println("query: "+ MovieTrailerSelection);
 
         return MovieQueryBuilder.query(mOpenHelper.getReadableDatabase(),  //table
                 projection,         //columns to return
-                MovieTrailerSelection,               //rows wanted
+                MovieTrailerAndReviewSelection,               //rows wanted
                 new String[]{MovieSelected, MovieSelected2,MovieSelected2},               //selection args
                 null,               //group by
                 null,               //row included in cursor
@@ -236,16 +232,14 @@ public class MovieProvider extends ContentProvider{
         );
     }
 
-    private Cursor getHighestRatedTrailer(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getHighestRatedTrailerAndReviews(Uri uri, String[] projection, String sortOrder) {
 
         String MovieSelected = MovieContract.HighestRatedTrailers.getMovieFromUri(uri);
         String MovieSelected2 = MovieContract.HighestRatedTrailers.getMovieTrailerFromUri(uri);
-       // System.out.println("URI: "+uri.toString() +"MovieSelected: "+MovieSelected + "MovieSelectedTrailer: "+MovieSelected2);
-        System.out.println("query: "+ MovieTrailerSelection);
 
         return MovieQueryHighestRatedBuilder.query(mOpenHelper.getReadableDatabase(),  //table
                 projection,         //columns to return
-                HighestRatedTrailerSelection,               //rows wanted
+                HighestRatedTrailerSelectionAndReviews,               //rows wanted
                 new String[]{MovieSelected,MovieSelected2,MovieSelected2},               //selection args
                 null,               //group by
                 null,               //row included in cursor
@@ -281,17 +275,15 @@ public class MovieProvider extends ContentProvider{
                 null                //order by
         );
     }
-    private Cursor getFavoriteTrailer(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getFavoriteTrailerAndReviews(Uri uri, String[] projection, String sortOrder) {
 
         String MovieSelected = MovieContract.FavoriteTrailers.getFavoriteFromUri(uri);
         String MovieSelected2 = MovieContract.FavoriteTrailers.getFavoriteTrailerFromUri(uri);
-        // System.out.println("URI: "+uri.toString() +"MovieSelected: "+MovieSelected + "MovieSelectedTrailer: "+MovieSelected2);
-        System.out.println("query: "+ MovieTrailerSelection);
 
         return MovieQueryFavoriteBuilder.query(mOpenHelper.getReadableDatabase(),  //table
                 projection,         //columns to return
-                FavoriteTrailerSelection,               //rows wanted
-                new String[]{MovieSelected,MovieSelected2},               //selection args
+                FavoriteTrailerAndReviewSelection,               //rows wanted
+                new String[]{MovieSelected,MovieSelected2,MovieSelected2},               //selection args
                 null,               //group by
                 null,               //row included in cursor
                 sortOrder                //order by
@@ -329,8 +321,6 @@ public class MovieProvider extends ContentProvider{
 
         String MovieSelected = MovieContract.FavoriteTrailers.getFavoriteFromUri(uri);
         String MovieSelected2 = MovieContract.FavoriteTrailers.getFavoriteTrailerFromUri(uri);
-        // System.out.println("URI: "+uri.toString() +"MovieSelected: "+MovieSelected + "MovieSelectedTrailer: "+MovieSelected2);
-        System.out.println("query: "+ MovieTrailerSelection);
 
         return MovieQueryFavoriteBuilder.query(mOpenHelper.getReadableDatabase(),  //table
                 projection,         //columns to return
@@ -380,7 +370,7 @@ public class MovieProvider extends ContentProvider{
         matcher.addURI(authority, MovieContract.PATH_MOST_POPULAR_REVIEWS + "/*", MOST_POPULAR_MOVIES_REVIEWS );
 
         matcher.addURI(authority, MovieContract.PATH_MOST_POPULAR_TRAILERS, MOST_POPULAR_MOVIES_TRAILER_TABLE);
-        matcher.addURI(authority, MovieContract.PATH_MOST_POPULAR_TRAILERS + "/*", MOST_POPULAR_MOVIES_TRAILER );
+        matcher.addURI(authority, MovieContract.PATH_MOST_POPULAR_TRAILERS + "/*", MOST_POPULAR_MOVIES_TRAILER_AND_REVIEWS);
 
 
         matcher.addURI(authority, MovieContract.PATH_HIGHEST_RATED, HIGHEST_RATED_MOVIES_TABLE);
@@ -390,7 +380,7 @@ public class MovieProvider extends ContentProvider{
         matcher.addURI(authority, MovieContract.PATH_HIGHEST_RATED_REVIEWS + "/*", HIGHEST_RATED_REVIEWS );
 
         matcher.addURI(authority, MovieContract.PATH_HIGHEST_RATED_TRAILERS, HIGHEST_RATED_TRAILERS_TABLE);
-        matcher.addURI(authority, MovieContract.PATH_HIGHEST_RATED_TRAILERS + "/*", HIGHEST_RATED_TRAILERS );
+        matcher.addURI(authority, MovieContract.PATH_HIGHEST_RATED_TRAILERS + "/*", HIGHEST_RATED_TRAILERS_AND_REVIEWS);
 
         matcher.addURI(authority, MovieContract.PATH_FAVORITE, FAVORITE_MOVIES_TABLE);
         matcher.addURI(authority, MovieContract.PATH_FAVORITE + "/*", FAVORITE_MOVIES );
@@ -399,7 +389,7 @@ public class MovieProvider extends ContentProvider{
         matcher.addURI(authority, MovieContract.PATH_FAVORITE_REVIEWS + "/*", FAVORITE_REVIEWS );
 
         matcher.addURI(authority, MovieContract.PATH_FAVORITE_TRAILERS, FAVORITE_TRAILERS_TABLE);
-        matcher.addURI(authority, MovieContract.PATH_FAVORITE_TRAILERS + "/*", FAVORITE_TRAILERS );
+        matcher.addURI(authority, MovieContract.PATH_FAVORITE_TRAILERS + "/*", FAVORITE_TRAILERS_AND_REVIEWS);
 
 
         return matcher;
@@ -432,7 +422,7 @@ public class MovieProvider extends ContentProvider{
             // Student: Uncomment and fill out these two cases
             case MOST_POPULAR_MOVIES:
                 return MovieContract.MostPopularEntry.CONTENT_TYPE;
-            case MOST_POPULAR_MOVIES_TRAILER:
+            case MOST_POPULAR_MOVIES_TRAILER_AND_REVIEWS:
                 return MovieContract.MostPopularTrailers.CONTENT_TYPE;
             case MOST_POPULAR_MOVIES_REVIEWS:
                 return MovieContract.MostPopularReviews.CONTENT_TYPE;
@@ -446,7 +436,7 @@ public class MovieProvider extends ContentProvider{
                 return MovieContract.HighestRatedEntry.CONTENT_ITEM_TYPE;
             case HIGHEST_RATED_REVIEWS:
                 return MovieContract.HighestRatedReviews.CONTENT_TYPE;
-            case HIGHEST_RATED_TRAILERS:
+            case HIGHEST_RATED_TRAILERS_AND_REVIEWS:
                 return MovieContract.HighestRatedTrailers.CONTENT_TYPE;
             case HIGHEST_RATED_MOVIES_TABLE:
                 return MovieContract.HighestRatedEntry.CONTENT_TYPE;
@@ -458,7 +448,7 @@ public class MovieProvider extends ContentProvider{
                 return MovieContract.FavoriteEntry.CONTENT_ITEM_TYPE;
             case FAVORITE_REVIEWS:
                 return MovieContract.FavoriteReviews.CONTENT_TYPE;
-            case FAVORITE_TRAILERS:
+            case FAVORITE_TRAILERS_AND_REVIEWS:
                 return MovieContract.FavoriteTrailers.CONTENT_TYPE;
             case FAVORITE_MOVIES_TABLE:
                 return MovieContract.FavoriteEntry.CONTENT_TYPE;
@@ -477,8 +467,6 @@ public class MovieProvider extends ContentProvider{
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
         Cursor retCursor;
-
-        System.out.println("Cursor Query: "+sUriMatcher.match(uri) + "   This is the URI: "+uri);
 
         switch (sUriMatcher.match(uri)) {
 
@@ -518,9 +506,9 @@ public class MovieProvider extends ContentProvider{
 
                 break;
             }
-            case MOST_POPULAR_MOVIES_TRAILER: {
-                retCursor = getMostPopularMovieTrailer(uri, projection, sortOrder);
-                System.out.println("Query"+ "MOST_POPULAR_MOVIES_TRAILER");
+            case MOST_POPULAR_MOVIES_TRAILER_AND_REVIEWS: {
+                retCursor = getMostPopularMovieTrailerAndReviews(uri, projection, sortOrder);
+                System.out.println("Query"+ "MOST_POPULAR_MOVIES_TRAILER_AND_REVIEWS");
 
                 break;
             }
@@ -587,9 +575,9 @@ public class MovieProvider extends ContentProvider{
 
                 break;
             }
-            case HIGHEST_RATED_TRAILERS: {
-                retCursor = getHighestRatedTrailer(uri, projection, sortOrder);
-                System.out.println("Query"+ "HIGHEST_RATED_TRAILERS");
+            case HIGHEST_RATED_TRAILERS_AND_REVIEWS: {
+                retCursor = getHighestRatedTrailerAndReviews(uri, projection, sortOrder);
+                System.out.println("Query"+ "HIGHEST_RATED_TRAILERS_AND_REVIEWS");
 
                 break;
             }
@@ -620,9 +608,9 @@ public class MovieProvider extends ContentProvider{
 
                 break;
             }
-            case FAVORITE_TRAILERS: {
-                retCursor = getFavoriteTrailer(uri, projection, sortOrder);
-                System.out.println("Query"+ "FAVORITE_TRAILERS");
+            case FAVORITE_TRAILERS_AND_REVIEWS: {
+                retCursor = getFavoriteTrailerAndReviews(uri, projection, sortOrder);
+                System.out.println("Query"+ "FAVORITE_TRAILERS_AND_REVIEWS");
 
                 break;
             }
@@ -765,20 +753,14 @@ public class MovieProvider extends ContentProvider{
             case FAVORITE_MOVIES_TABLE:
                 rowsDeleted = db.delete(
                         MovieContract.FavoriteEntry.TABLE_NAME, selection, selectionArgs);
-                System.out.println("Delete executed: "+ selection+ " "+selectionArgs);
-
                 break;
             case FAVORITE_TRAILERS_TABLE:
                 rowsDeleted = db.delete(
                         MovieContract.FavoriteTrailers.TABLE_NAME, selection, selectionArgs);
-                System.out.println("Delete executed: "+ selection+ " "+selectionArgs);
-
                 break;
             case FAVORITE_REVIEWS_TABLE:
                 rowsDeleted = db.delete(
                         MovieContract.FavoriteReviews.TABLE_NAME, selection, selectionArgs);
-                System.out.println("Delete executed: "+ selection+ " "+selectionArgs);
-
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -804,7 +786,7 @@ public class MovieProvider extends ContentProvider{
                 rowsUpdated = db.update(MovieContract.MostPopularEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
-            case MOST_POPULAR_MOVIES_TRAILER:
+            case MOST_POPULAR_MOVIES_TRAILER_AND_REVIEWS:
                 rowsUpdated = db.update(MovieContract.MostPopularTrailers.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;

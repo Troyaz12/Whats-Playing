@@ -26,15 +26,7 @@ public class Movie implements Parcelable{
         this.voteAverage = lvoteAverage;
         this.plotSynopsis= lplotSynopsis;
         this.id = movieId;
-      //  this.tableID = movieTableID;
 
-//        int trailerSize = ltrailers.length;
-  //      trailers = new String[trailerSize];
-
-    //    for (int x=0; x<trailerSize; x++) {
-      //      this.trailers[x] = ltrailers[x];
-        //    System.out.println("trailers in object: " + trailers[x]);
-      //  }
         this.trailers = ltrailers;
         this.sortOrder = sort;
         this.reviews = reviews;
@@ -60,7 +52,6 @@ public class Movie implements Parcelable{
 
         for (int x=0; x<reviewSize; x++) {
             this.reviews[x] = reviewList[x];
-            System.out.println("reviews parced");
         }
 
 
@@ -163,7 +154,6 @@ public class Movie implements Parcelable{
 
         for (int x=0; x<trailerSize; x++) {
             this.trailers[x] = ltrailers[x];
-            System.out.println("trailers parced");
         }
     }
     public String getSortOrder(){
@@ -177,6 +167,7 @@ public class Movie implements Parcelable{
 
     public String[] getReviews(){
 
+
         return reviews;
     }
 
@@ -186,7 +177,6 @@ public class Movie implements Parcelable{
 
         for (int x=0; x<reviewSize; x++) {
             this.reviews[x] = reviewList[x];
-            System.out.println("reviews parced");
         }
     }
 

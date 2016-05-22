@@ -26,10 +26,6 @@ import java.util.Vector;
  * Created by TroysMacBook on 5/13/16.
  */
 public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
-
-
-    public Long[] tableID;
-    public String[] movieID;
     public Context context;
     public String sortOrder="Highest Rated";
     public Handler handler = new Handler();
@@ -140,9 +136,6 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
 
         Uri.Builder builder;
 
-        //  SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //  sortOrder = prefs.getString(this.getString(R.string.sort_key), this.getString(R.string.default_sort_value));
-
         try {
             //building path to website to pull data
             builder = new Uri.Builder();
@@ -218,7 +211,6 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
         JSONArray movieArray = movieJSON.getJSONArray(getResults);
 
         //this will hold movie objects
-        // Movie[] moviesPlaying = new Movie[movieArray.length()];
         Vector<ContentValues> cVVector = new Vector<ContentValues>(movieArray.length());
         String trailerKey;
         //if movie has no trailers
@@ -226,7 +218,6 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
             trailerKey = "No Trailer Available";
 
             //add trailer into the database
-            //       addMovieTrailer(movieTableID, trailerKey);
 
             ContentValues MovieTrailer = new ContentValues();
 
@@ -253,7 +244,6 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
             }
 
             //add trailer into the database
-            //       addMovieTrailer(movieTableID, trailerKey);
 
             ContentValues MovieTrailer = new ContentValues();
 
@@ -295,9 +285,7 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
         //get movie info and put it into a JSONArray
         JSONObject movieJSON = new JSONObject(movieJsonStr);
         JSONArray movieArray = movieJSON.getJSONArray(getResults);
-        Uri movieTrailersURI=null;
-        //this will hold movie objects
-        // Movie[] moviesPlaying = new Movie[movieArray.length()];
+
         Vector<ContentValues> cVVector = new Vector<ContentValues>(movieArray.length());
 
         for (int i = 0; i < movieArray.length(); i++) {
@@ -365,19 +353,6 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
         int cursorRecords = cur.getCount();
         System.out.println("records" +cursorRecords);
 
-
-        int cursorRecords2;
-        //    Movie[] moviesPlaying = new Movie[cursorRecords];
-
-
-        String findTitle;
-
-        Long insertMovie_Selected_trailer_id;
-        String insertTrailer=null;
-
-        //  String[] trailers = new String[cursorRecords];
-        String[] trailers;
-
         movieTableID = new Long[cursorRecords];
         movieID = new String[cursorRecords];
 
@@ -407,8 +382,6 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
 
                         LoadMovieReviews newRevs = new LoadMovieReviews(context,movieTableID,movieID,sortOrder);
                         newRevs.execute();
-                        // getMovieReview(insertTableID,insertMovie_id);
-
                     }
                 }, 32000);
             }
