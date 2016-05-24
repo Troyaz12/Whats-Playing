@@ -42,7 +42,6 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        System.out.println("sort order is: "+sortOrder);
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
@@ -61,13 +60,11 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
                 builder.scheme("https")
                         .authority("api.themoviedb.org")
                         .appendPath("3")
-                        .appendPath("discover")
                         .appendPath("movie")
-                        .appendQueryParameter("sort_by", "vote_average.desc")
+                        .appendPath("top_rated")
                         .appendQueryParameter("api_key", BuildConfig.Movie_db_api_key);
 
             String myUrl = builder.build().toString();
-            System.out.println("URL: " + myUrl);
             //constructing URL for MovieDB
             URL url = new URL(myUrl);
 
@@ -79,12 +76,10 @@ public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
 
-            System.out.println("got input stream");
 
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
-                System.out.println("input stream is null");
             }
             //buffer reader to improve performance
             reader = new BufferedReader(new InputStreamReader(inputStream));

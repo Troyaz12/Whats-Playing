@@ -50,9 +50,6 @@
             android:syncable="true"
             />
 
-        <service android:name=".Service.MovieService"/>
-        <receiver android:name=".Service.MovieService$AlarmReceiver" android:enabled="true"/>
-
         <!-- SyncAdapter's dummy authentication service -->
         <service
             android:name=".sync.MovieAuthenticatorService"

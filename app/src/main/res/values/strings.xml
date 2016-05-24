@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">whatsPlaying_2</string>
+    <string name="app_name">Whats Playing?</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="sort_key">Sort Order Used</string>

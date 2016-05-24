@@ -62,7 +62,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
         Log.d(LOG_TAG, "onPerformSync Called.");
 
        sortOrder = "Most Popular";
-        System.out.println("sort order is: "+sortOrder);
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
@@ -77,13 +76,11 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
                 builder.scheme("https")
                         .authority("api.themoviedb.org")
                         .appendPath("3")
-                        .appendPath("discover")
                         .appendPath("movie")
-                        .appendQueryParameter("sort_by", "popularity.desc")
+                        .appendPath("popular")
                         .appendQueryParameter("api_key", BuildConfig.Movie_db_api_key);
 
             String myUrl = builder.build().toString();
-            System.out.println("URL: " + myUrl);
             //constructing URL for MovieDB
             URL url = new URL(myUrl);
 
@@ -95,7 +92,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
 
-            System.out.println("got input stream");
 
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
@@ -168,7 +164,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
                     .appendQueryParameter("api_key", BuildConfig.Movie_db_api_key);
 
             String myUrl = builder.build().toString();
-            System.out.println("URL: " + myUrl);
             //constructing URL for MovieDB
             URL url = new URL(myUrl);
 
