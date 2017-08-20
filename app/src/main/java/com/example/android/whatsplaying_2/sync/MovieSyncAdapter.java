@@ -191,7 +191,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
                 // Stream is empty.
             }
             movieString = buffer.toString();
-            System.out.println("Movies" + movieString);
 
 
         } catch (
@@ -280,7 +279,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
         }
     }
     private void getMovieData(String movieJsonStr, String queryTable) throws JSONException {
-        System.out.println("JSON: " + movieJsonStr);
 
         final Long[] movieTableID;
         final String[] movieID;
@@ -357,11 +355,9 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
         Cursor cur = getContext().getContentResolver().query(movieDetailsURI, //pull only movies that user wants to see, either most popular or highest rated
                 null, null,null, null);
 
-        System.out.println("URI: "+movieDetailsURI);
 
         //get cursor count, set up movie array to store values in.
         int cursorRecords = cur.getCount();
-        System.out.println("records" +cursorRecords);
 
         movieTableID = new Long[cursorRecords];
         movieID = new String[cursorRecords];
@@ -375,8 +371,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
 
                 movieTableID[i] = insertTableID;
                 movieID[i] = insertMovie_id;
-
-                System.out.println("movie id: " +insertMovie_id + " "+ insertTableID);
 
                 //load movie trailers
                 getMovieTrailer(insertTableID, insertMovie_id);
@@ -399,8 +393,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
             }
         });
         tPopularReviews.start();
-
-
 
         Thread tHighestRated = new Thread( new Runnable(){
             public void run() {
@@ -428,8 +420,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(getSyncAccount(context),
                 context.getString(R.string.content_authority), bundle);
-
-        System.out.print("SyncImmediately is being called");
     }
 
     /**
@@ -451,7 +441,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter{
 
         // If the password doesn't exist, the account doesn't exist
         if ( null == accountManager.getPassword(newAccount) ) {
-            System.out.println("new account created");
         /*
          * Add the account and account type, no password or user data
          * If successful, return the Account object, otherwise report an error.

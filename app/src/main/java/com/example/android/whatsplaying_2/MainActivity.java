@@ -1,5 +1,6 @@
 package com.example.android.whatsplaying_2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.whatsplaying_2.sync.MovieSyncAdapter;
+import com.facebook.stetho.Stetho;
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callback{
     private String mSortOrder;
@@ -35,6 +37,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         }else{
             mTwoPane=false;
         }
+        Context context = this;
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(context)
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
+                .build()
+        );
+
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

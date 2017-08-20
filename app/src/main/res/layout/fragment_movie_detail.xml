@@ -7,12 +7,11 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.android.whatsplaying_2.MovieDetailFragment"
+    tools:context="com.example.android.whatsplaying_2.MovieDetail"
     tools:showIn="@layout/activity_movie_detail"
     android:id="@+id/fragment_movie_detail"
-
+    android:background="@color/colorGray"
     >
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -45,13 +44,16 @@
                 android:layout_gravity="center"
                 />
 
-            <ImageView
-                android:layout_gravity="center"
-                android:layout_width="300dp"
-                android:layout_height="500dp"
-                android:scaleType="centerCrop"
-                android:id = "@+id/moviePosterDetail"
-                />
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="300dp"
+                    android:layout_height="500dp"
+                    android:scaleType="centerCrop"
+                    android:id = "@+id/moviePosterDetail"
+                    android:background="@color/colorPrimaryDark"
+                    android:elevation="10dp"
+                    android:transitionName="@string/detail_poster_transition_name"
+                    />
 
             <TextView
                 style="@style/PlotFont"

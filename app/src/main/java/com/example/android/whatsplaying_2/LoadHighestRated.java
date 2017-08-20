@@ -25,7 +25,7 @@ import java.util.Vector;
 /**
  * Created by TroysMacBook on 5/13/16.
  */
-public class LoadHighestRated extends AsyncTask<Void, Void, Void> {
+public class LoadHighestRated extends AsyncTask<Void, Void, Void> {  //this class retrieves the highest rated movie list from the web
     public Context context;
     public String sortOrder="Highest Rated";
     public Handler handler = new Handler();
