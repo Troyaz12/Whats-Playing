@@ -16,6 +16,9 @@
     <string name="sync_account_type">whatsplaying_2.example.com</string>
     <string name="detail_poster_transition_name">movie_poster_transition_name</string>
     <string name="main_poster_transition_from_name">poster_transition_from</string>
+    <string name="hot_movies">Hot Movies</string>
+    <string name="highest_rated">Highest Rated</string>
+    <string name="favorites">Favorites</string>
 
 
 </resources>
