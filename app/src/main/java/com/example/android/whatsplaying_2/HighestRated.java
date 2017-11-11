@@ -66,10 +66,10 @@ public class HighestRated extends Fragment implements LoaderManager.LoaderCallba
 
 
 
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridview);
-        gridView.setAdapter(movieAdapter);
+        GridView gridViewHighestRated = (GridView) rootView.findViewById(R.id.gridview);
+        gridViewHighestRated.setAdapter(movieAdapter);
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridViewHighestRated.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -80,7 +80,7 @@ public class HighestRated extends Fragment implements LoaderManager.LoaderCallba
                     final Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
                         if (cursor != null) {
 
-                                ((Callback) getActivity())
+                                ((Callback) getContext())
                                         .onItemSelected(MovieContract.HighestRatedTrailers.buildTrailer(
                                                 cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
                                         ));

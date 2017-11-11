@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements WhatsHot.Callback
         SectionPagerAdapter adapter = new SectionPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new WhatsHot());
         adapter.addFragment(new HighestRated());
-        adapter.addFragment(new WhatsHot());
+        adapter.addFragment(new Favorites());
         mViewPager.setAdapter(adapter);
 
     }
