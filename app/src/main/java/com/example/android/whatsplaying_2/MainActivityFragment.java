@@ -1,18 +1,13 @@
 package com.example.android.whatsplaying_2;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,6 +24,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     private MovieAdapter movieAdapter;
     public String sortOrder;
     Uri movieDetailsURI=null;
+
+
+
+
 
     private static final String[] MOVIE_COLUMNS_MOST_POPULAR = {
       MovieContract.MostPopularEntry.TABLE_NAME+"."+MovieContract.MostPopularEntry._ID,
@@ -78,54 +77,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         movieAdapter = new MovieAdapter(getActivity(),null,0);
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 
 
         GridView gridView = (GridView) rootView.findViewById(R.id.gridview);
         gridView.setAdapter(movieAdapter);
-
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) rootView.findViewById(R.id.bottomNavView_Bar);
-      //  BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-
-        Menu menu = bottomNavigationView.getMenu();
-        MenuItem meniItem= menu.getItem(0);
-        meniItem.setChecked(true);
-
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch (item.getItemId()) {
-                    case R.id.ic_arrow:
-
-
-
-                        break;
-                    case R.id.ic_android:
-
-                        Intent intent = new Intent(MainActivity.this, Activity1.class);
-                        startActivity(intent);
-                        break;
-
-                    case R.id.ic_books:
-                        Intent intent2 = new Intent(MainActivity.this, Activity2.class);
-                        startActivity(intent2);
-
-                        break;
-                 
-                }
-
-                return false;
-
-
-            }
-        });
-
-
-
-
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

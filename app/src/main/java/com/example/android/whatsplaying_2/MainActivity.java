@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     private String mSortOrder;
     private static final String MOVIEDETAIL_TAG = "MDTAG";
     private boolean mTwoPane;
+
+    private SectionPagerAdapter mSectionPagerAdapter;
+
+    private ViewPager mViewPager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +52,31 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
                 .build()
         );
 
+        mSectionPagerAdapter = new SectionPagerAdapter(getSupportFragmentManager());
+
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        setupViewPager(mViewPager);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_whatshot);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_stars);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_favorite);
+
 
     }
+
+    private void setupViewPager(ViewPager mViewPager) {
+
+        SectionPagerAdapter adapter = new SectionPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new MainActivityFragment());
+        adapter.addFragment(new MainActivityFragment());
+        adapter.addFragment(new MainActivityFragment());
+        mViewPager.setAdapter(adapter);
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
