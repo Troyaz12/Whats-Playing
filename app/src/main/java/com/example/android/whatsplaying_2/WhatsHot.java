@@ -18,11 +18,10 @@ import com.example.android.whatsplaying_2.data.MovieContract;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class WhatsHot extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int Popular_MOVIE_LOADER = 0;
     private MovieAdapter movieAdapter;
-    public String sortOrder;
     Uri movieDetailsURI=null;
 
 
@@ -59,12 +58,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         void onItemSelected(Uri movieUri);
     }
 
-    public MainActivityFragment() {
+    public WhatsHot() {
     }
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        sortOrder = Utility.getSortOrder(getActivity());
+
 
     }
     @Override
@@ -91,7 +90,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 // CursorAdapter returns a cursor at the correct position for getItem(), or null
                 // if it cannot seek to that position.
 
-                if(sortOrder.equals("Most Popular")) {
+
                     final Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
                         if (cursor != null) {
 
@@ -100,60 +99,22 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                                                 cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
                                         ));
                         }
-                }else if(sortOrder.equals("Highest Rated")){
-                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-                    if (cursor != null) {
-                        ((Callback) getActivity())
-                                .onItemSelected(MovieContract.HighestRatedTrailers.buildTrailer(
-                                        cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
-                                ));
-
-                    }
-
-                }else if(sortOrder.equals("Favorites")) {
-                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                    if (cursor != null) {
-                        ((Callback) getActivity())
-                                .onItemSelected(MovieContract.FavoriteTrailers.buildTrailer(
-                                        cursor.getLong(COL_MOVIE_MOVIE_ID), cursor.getLong(COL_MOVIE_MOVIE_ID)
-                                ));
-                    }
-                }
-            }
+    }
         });
 
         return rootView;
     }
 
-    void onSortChanged(){
-        sortOrder = Utility.getSortOrder(getActivity());
 
-        if(sortOrder.equals("Most Popular")) {
-            movieDetailsURI = MovieContract.MostPopularEntry.CONTENT_URI;
-        }else if(sortOrder.equals("Highest Rated")){
-            movieDetailsURI = MovieContract.HighestRatedEntry.CONTENT_URI;
-        }else if(sortOrder.equals("Favorites")){
-        movieDetailsURI = MovieContract.FavoriteEntry.CONTENT_URI;
-        }
-        getLoaderManager().restartLoader(Popular_MOVIE_LOADER, null, this);
-    }
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        sortOrder = Utility.getSortOrder(getActivity());
 
-        if(sortOrder.equals("Most Popular")) {
+
             movieDetailsURI = MovieContract.MostPopularEntry.CONTENT_URI;
             return new CursorLoader(getActivity(),movieDetailsURI, MOVIE_COLUMNS_MOST_POPULAR,null,null,null);
-        }else if(sortOrder.equals("Highest Rated")){
-            movieDetailsURI = MovieContract.HighestRatedEntry.CONTENT_URI;
-            return new CursorLoader(getActivity(),movieDetailsURI, MOVIE_COLUMNS_HIGHEST_RATED,null,null,null);
-        }else if(sortOrder.equals("Favorites")){
-            movieDetailsURI = MovieContract.FavoriteEntry.CONTENT_URI;
-            return new CursorLoader(getActivity(),movieDetailsURI, MOVIE_COLUMNS_FAVORITES,null,null,null);
-        }
 
-        return null;
+
     }
 
     @Override

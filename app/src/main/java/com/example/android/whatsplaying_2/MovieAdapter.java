@@ -34,7 +34,7 @@ public class MovieAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-            String Movieurl = "http://image.tmdb.org/t/p/w185" + cursor.getString(MainActivityFragment.COL_MOVIE_IMAGE);
+            String Movieurl = "http://image.tmdb.org/t/p/w185" + cursor.getString(WhatsHot.COL_MOVIE_IMAGE);
             ImageView posterView = (ImageView) view.findViewById(R.id.moviePoster);
 
             Picasso.with(context)

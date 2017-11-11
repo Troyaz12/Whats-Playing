@@ -14,7 +14,7 @@
 
     <fragment
             android:id="@+id/movie_fragment"
-            android:name="com.example.android.whatsplaying_2.MainActivityFragment"
+            android:name="com.example.android.whatsplaying_2.WhatsHot"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"

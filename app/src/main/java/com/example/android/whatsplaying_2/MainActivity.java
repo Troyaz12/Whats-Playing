@@ -13,8 +13,7 @@ import android.view.MenuItem;
 import com.example.android.whatsplaying_2.sync.MovieSyncAdapter;
 import com.facebook.stetho.Stetho;
 
-public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callback{
-    private String mSortOrder;
+public class MainActivity extends AppCompatActivity implements WhatsHot.Callback{
     private static final String MOVIEDETAIL_TAG = "MDTAG";
     private boolean mTwoPane;
 
@@ -26,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mSortOrder = Utility.getSortOrder(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -70,9 +68,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     private void setupViewPager(ViewPager mViewPager) {
 
         SectionPagerAdapter adapter = new SectionPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new MainActivityFragment());
-        adapter.addFragment(new MainActivityFragment());
-        adapter.addFragment(new MainActivityFragment());
+        adapter.addFragment(new WhatsHot());
+        adapter.addFragment(new WhatsHot());
+        adapter.addFragment(new WhatsHot());
         mViewPager.setAdapter(adapter);
 
     }
@@ -104,23 +102,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     }
     protected void onResume(){
         super.onResume();
-        String sortOrder = Utility.getSortOrder(this);
-
-        if (sortOrder != null && !sortOrder.equals(mSortOrder)) {
-            MainActivityFragment mf = (MainActivityFragment)getSupportFragmentManager().findFragmentById(R.id.movie_fragment);
-            if ( null != mf ) {
-                mf.onSortChanged();
-            }
-            MovieDetail.MovieDetailFragment mdf = (MovieDetail.MovieDetailFragment)getSupportFragmentManager().findFragmentByTag(MOVIEDETAIL_TAG);
-            if(null!=mdf){
-                MovieDetail.MovieDetailFragment fragment = new MovieDetail.MovieDetailFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.movie_detail_container, fragment,MOVIEDETAIL_TAG)
-                        .commit();
-            }
-            mSortOrder = sortOrder;
-        }
-
     }
     public void onItemSelected(Uri contentUri){  //need to figure out how to add sortOrder
         if(mTwoPane){
