@@ -18,18 +18,19 @@ import com.example.android.whatsplaying_2.data.MovieContract;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class WhatsHot extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class HighestRated extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int Popular_MOVIE_LOADER = 0;
+    private static final int HIGHEST_RATED_MOVIE_LOADER = 0;
     private MovieAdapter movieAdapter;
     Uri movieDetailsURI=null;
 
 
-    private static final String[] MOVIE_COLUMNS_MOST_POPULAR = {
-      MovieContract.MostPopularEntry.TABLE_NAME+"."+MovieContract.MostPopularEntry._ID,
-            MovieContract.MostPopularEntry.MOVIE_ID,
-            MovieContract.MostPopularEntry.IMAGE
+    private static final String[] MOVIE_COLUMNS_HIGHEST_RATED = {
+            MovieContract.HighestRatedEntry.TABLE_NAME+"."+MovieContract.HighestRatedEntry._ID,
+            MovieContract.HighestRatedEntry.MOVIE_ID,
+            MovieContract.HighestRatedEntry.IMAGE
     };
+
 
     static final int COL_MOVIE_ID = 0;
     static final int COL_MOVIE_MOVIE_ID = 1;
@@ -43,7 +44,7 @@ public class WhatsHot extends Fragment implements LoaderManager.LoaderCallbacks<
         void onItemSelected(Uri movieUri);
     }
 
-    public WhatsHot() {
+    public HighestRated() {
     }
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -80,7 +81,7 @@ public class WhatsHot extends Fragment implements LoaderManager.LoaderCallbacks<
                         if (cursor != null) {
 
                                 ((Callback) getActivity())
-                                        .onItemSelected(MovieContract.MostPopularTrailers.buildTrailer(
+                                        .onItemSelected(MovieContract.HighestRatedTrailers.buildTrailer(
                                                 cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
                                         ));
                         }
@@ -96,8 +97,8 @@ public class WhatsHot extends Fragment implements LoaderManager.LoaderCallbacks<
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
 
-            movieDetailsURI = MovieContract.MostPopularEntry.CONTENT_URI;
-            return new CursorLoader(getActivity(),movieDetailsURI, MOVIE_COLUMNS_MOST_POPULAR,null,null,null);
+            movieDetailsURI = MovieContract.HighestRatedEntry.CONTENT_URI;
+            return new CursorLoader(getActivity(),movieDetailsURI, MOVIE_COLUMNS_HIGHEST_RATED,null,null,null);
 
 
     }
@@ -113,7 +114,7 @@ public class WhatsHot extends Fragment implements LoaderManager.LoaderCallbacks<
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(Popular_MOVIE_LOADER, null, this);
+        getLoaderManager().initLoader(HIGHEST_RATED_MOVIE_LOADER, null, this);
 
         super.onActivityCreated(savedInstanceState);
     }
