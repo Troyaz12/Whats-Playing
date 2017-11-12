@@ -21,9 +21,8 @@ import com.example.android.whatsplaying_2.data.MovieContract;
 public class HighestRated extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int HIGHEST_RATED_MOVIE_LOADER = 0;
-    private MovieAdapter movieAdapter;
-    Uri movieDetailsURI=null;
-
+    private MovieAdapter movieHighestRatedAdapter;
+    Uri moviehighestRatedDetailsURI =null;
 
     private static final String[] MOVIE_COLUMNS_HIGHEST_RATED = {
             MovieContract.HighestRatedEntry.TABLE_NAME+"."+MovieContract.HighestRatedEntry._ID,
@@ -60,14 +59,14 @@ public class HighestRated extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        movieAdapter = new MovieAdapter(getActivity(),null,0);
+        movieHighestRatedAdapter = new MovieAdapter(getActivity(),null,0);
 
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 
 
         GridView gridViewHighestRated = (GridView) rootView.findViewById(R.id.gridview);
-        gridViewHighestRated.setAdapter(movieAdapter);
+        gridViewHighestRated.setAdapter(movieHighestRatedAdapter);
 
         gridViewHighestRated.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -77,14 +76,22 @@ public class HighestRated extends Fragment implements LoaderManager.LoaderCallba
                 // if it cannot seek to that position.
 
 
-                    final Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                        if (cursor != null) {
+                   final Cursor cursorHighestRated = (Cursor) adapterView.getItemAtPosition(i);
+                        if (cursorHighestRated != null) {
 
-                                ((Callback) getContext())
+                                ((HighestRated.Callback) getActivity())
                                         .onItemSelected(MovieContract.HighestRatedTrailers.buildTrailer(
-                                                cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
+                                                cursorHighestRated.getLong(COL_MOVIE_ID), cursorHighestRated.getLong(COL_MOVIE_ID)
                                         ));
+
+
+
                         }
+
+
+
+
+
 
     }
         });
@@ -97,20 +104,20 @@ public class HighestRated extends Fragment implements LoaderManager.LoaderCallba
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
 
-            movieDetailsURI = MovieContract.HighestRatedEntry.CONTENT_URI;
-            return new CursorLoader(getActivity(),movieDetailsURI, MOVIE_COLUMNS_HIGHEST_RATED,null,null,null);
+            moviehighestRatedDetailsURI = MovieContract.HighestRatedEntry.CONTENT_URI;
+            return new CursorLoader(getActivity(), moviehighestRatedDetailsURI, MOVIE_COLUMNS_HIGHEST_RATED,null,null,null);
 
 
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        movieAdapter.swapCursor(data);
+        movieHighestRatedAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        movieAdapter.swapCursor(null);
+        movieHighestRatedAdapter.swapCursor(null);
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

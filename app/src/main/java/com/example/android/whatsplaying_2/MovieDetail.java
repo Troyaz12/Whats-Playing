@@ -55,7 +55,6 @@ public class MovieDetail extends AppCompatActivity {
         Boolean movieInFavorites;
         public String[] trailer;
         public String[] reviews;
-        public String sortOrder;
         static final String DETAIL_URI = "URI";
         private static final int DETAIL_LOADER = 0;
         private Uri mUri;
@@ -164,9 +163,13 @@ public class MovieDetail extends AppCompatActivity {
             }
             if ( null != mUri ) {
 
-                sortOrder = Utility.getSortOrder(getActivity());
+                //find out what table to pull the movie data from
+                Uri breakupUri = Uri.parse(mUri.toString());
+                String[] path = breakupUri.getPath().split("/");
+                String table = path[ path.length - 2 ];
 
-                if (sortOrder.equals("Most Popular")) {
+
+                if (table.equals("most_popular_trailers")) {
                     return new CursorLoader(
                             getActivity(),
                             mUri,
@@ -175,7 +178,7 @@ public class MovieDetail extends AppCompatActivity {
                             null,
                             null
                     );
-                } else if (sortOrder.equals("Highest Rated")) {
+                } else if (table.equals("highest_rated_trailers")) {
                     return new CursorLoader(
                             getActivity(),
                             mUri,
@@ -184,7 +187,7 @@ public class MovieDetail extends AppCompatActivity {
                             null,
                             null
                     );
-                } else if (sortOrder.equals("Favorites")) {
+                } else if (table.equals("favorite_trailers")) {
 
                     return new CursorLoader(
                             getActivity(),
@@ -211,7 +214,6 @@ public class MovieDetail extends AppCompatActivity {
 
                 return; }
 
-            sortOrder = Utility.getSortOrder(getActivity());
             List<String> lista = new ArrayList<String>();
             lista.add("Select Trailer");
 
@@ -265,7 +267,7 @@ public class MovieDetail extends AppCompatActivity {
             overviewTextView.setText(overView);
 
             //put into movie object to be passed to favorites
-            movie = new Movie(title,releaseDate,image,voteAverage,overView,movie_ID,trailer,sortOrder, reviews);
+            movie = new Movie(title,releaseDate,image,voteAverage,overView,movie_ID,trailer,"null", reviews);
 
             movieTaskDetail = new dataBase(getActivity(),movie);   //create a instance of the database class
             movieInFavorites = movieTaskDetail.getTogglePosition(movie.getId());
@@ -311,7 +313,6 @@ public class MovieDetail extends AppCompatActivity {
         public class MyOnItemSelectedListener implements AdapterView.OnItemSelectedListener {       //listener for the trailer spinner
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 String selected = trailer[pos];
-                System.out.println("Selected trailer " +selected);
                 if(selected!="Select Trailer"&&!selected.equalsIgnoreCase("No Trailer Available")){     //do not attend to load the default text
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + selected)));
                 }

@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.example.android.whatsplaying_2.sync.MovieSyncAdapter;
 import com.facebook.stetho.Stetho;
 
-public class MainActivity extends AppCompatActivity implements WhatsHot.Callback{
+public class MainActivity extends AppCompatActivity implements WhatsHot.Callback, Favorites.Callback,HighestRated.Callback{
     private static final String MOVIEDETAIL_TAG = "MDTAG";
     private boolean mTwoPane;
 
@@ -87,23 +87,23 @@ public class MainActivity extends AppCompatActivity implements WhatsHot.Callback
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+ //       int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent();
-            intent.setClass(this,SettingsActivity.class);
-            startActivity(intent);
+ //       if (id == R.id.action_settings) {
+ //           Intent intent = new Intent();
+ //           intent.setClass(this,SettingsActivity.class);
+ //           startActivity(intent);
 
-            return true;
-        }
+     //       return true;
+    //    }
 
         return super.onOptionsItemSelected(item);
     }
     protected void onResume(){
         super.onResume();
     }
-    public void onItemSelected(Uri contentUri){  //need to figure out how to add sortOrder
+    public void onItemSelected(Uri contentUri){
         if(mTwoPane){
         //for two pane mode, show detail view in this activity by changing the detail frament through a fragment transaction
             Bundle args = new Bundle();
