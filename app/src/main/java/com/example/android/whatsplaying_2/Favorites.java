@@ -50,7 +50,6 @@ public class Favorites extends Fragment implements LoaderManager.LoaderCallbacks
         super.onCreate(savedInstanceState);
 
 
-
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -82,7 +81,7 @@ public class Favorites extends Fragment implements LoaderManager.LoaderCallbacks
 
                                 ((Callback) getActivity())
                                         .onItemSelected(MovieContract.FavoriteTrailers.buildTrailer(
-                                                cursor.getLong(COL_MOVIE_ID), cursor.getLong(COL_MOVIE_ID)
+                                                cursor.getLong(COL_MOVIE_MOVIE_ID), cursor.getLong(COL_MOVIE_MOVIE_ID)
                                         ));
                         }
 

@@ -65,7 +65,7 @@ public class MovieDetail extends AppCompatActivity {
         ImageView PosterDetail;
         TextView overviewTextView;
         TextView review;
-
+        private String table;
 
         private static final String[] MOST_POPULAR_MOVIE_COLUMNS = {
                 MovieContract.MostPopularEntry.TABLE_NAME + "." + MovieContract.MostPopularEntry.MOVIE_ID,
@@ -166,7 +166,9 @@ public class MovieDetail extends AppCompatActivity {
                 //find out what table to pull the movie data from
                 Uri breakupUri = Uri.parse(mUri.toString());
                 String[] path = breakupUri.getPath().split("/");
-                String table = path[ path.length - 2 ];
+                table = path[ path.length - 2 ];
+
+
 
 
                 if (table.equals("most_popular_trailers")) {
@@ -227,7 +229,7 @@ public class MovieDetail extends AppCompatActivity {
 
             //get trailers and put into an array
             trailer = Utility.getTrailers(data);
-            reviews = Utility.getReviews(data, getContext());
+            reviews = Utility.getReviews(data, getContext(), table);
 
                 //create labels in spinner
             spinnerLabels = new String[trailer.length];
@@ -267,7 +269,7 @@ public class MovieDetail extends AppCompatActivity {
             overviewTextView.setText(overView);
 
             //put into movie object to be passed to favorites
-            movie = new Movie(title,releaseDate,image,voteAverage,overView,movie_ID,trailer,"null", reviews);
+            movie = new Movie(title,releaseDate,image,voteAverage,overView,movie_ID,trailer,table, reviews);
 
             movieTaskDetail = new dataBase(getActivity(),movie);   //create a instance of the database class
             movieInFavorites = movieTaskDetail.getTogglePosition(movie.getId());

@@ -79,7 +79,7 @@ public class HighestRated extends Fragment implements LoaderManager.LoaderCallba
                    final Cursor cursorHighestRated = (Cursor) adapterView.getItemAtPosition(i);
                         if (cursorHighestRated != null) {
 
-                                ((HighestRated.Callback) getActivity())
+                                ((Callback) getActivity())
                                         .onItemSelected(MovieContract.HighestRatedTrailers.buildTrailer(
                                                 cursorHighestRated.getLong(COL_MOVIE_ID), cursorHighestRated.getLong(COL_MOVIE_ID)
                                         ));
@@ -87,10 +87,6 @@ public class HighestRated extends Fragment implements LoaderManager.LoaderCallba
 
 
                         }
-
-
-
-
 
 
     }

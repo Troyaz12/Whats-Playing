@@ -1,9 +1,7 @@
 package com.example.android.whatsplaying_2;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +22,6 @@ public class Utility {
     private static final int COL_REVIEW_AUTHOR = 8;
 
 
-    public static String getSortOrder(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(context.getString(R.string.sort_key),
-                context.getString(R.string.default_sort_value));
-    }
     public static String[] getTrailers(Cursor data){
         List<String> lista = new ArrayList<String>();
         lista.add("Select Trailer");
@@ -57,12 +50,13 @@ public class Utility {
         return ltrailer;
     }
 
-    public static String[] getReviews(Cursor data, Context context){
+    public static String[] getReviews(Cursor data, Context context, String frag){       //frag is the fragment that called the method
         List<String> lista = new ArrayList<String>();
+
 
         data.moveToFirst();
 
-        if(!Utility.getSortOrder(context).equalsIgnoreCase("Favorites")) {
+        if(!frag.equalsIgnoreCase("favorite_trailers")) {
             if (!data.getString(COL_REVIEW_AUTHOR).equalsIgnoreCase("No Reviews Available")) {
                 //loop through cursor to get all reviews
                 for (int i = 0; i < data.getCount(); i++) {
